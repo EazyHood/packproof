@@ -6,8 +6,8 @@ Started during the IBM Bob 2.0 build window, 25 September 2026 (Colombia time).
 |---|---|---|
 | Planning brief and acceptance criteria | Codex, based on official event materials and prior planning | Written |
 | Independent fixture packages and consumer reference contracts | Codex, separately attributed under validation-fixtures | Written; 5 source tests passed and 6 manual consumer cases observed as expected |
-| PackProof CLI, archive/report pipeline and substantive implementation | IBM Bob IDE (task BOB_TASK_01) | Implemented: `src/hash.mjs`, `src/pack.mjs`, `src/install.mjs`, `src/run-contract.mjs`, `src/classify.mjs`, `src/report.mjs`, `src/runner.mjs`, `src/cli.mjs`, `test/packproof.test.mjs`, `package.json` |
-| Independent verification and review | Codex | Task 01: 23/23 tests pass, but real six-case demo stops at npm pack on Windows; independent reproductions and repair instructions in BOB_REVIEW_01.md / BOB_TASK_02.md |
+| PackProof CLI, archive/report pipeline and substantive implementation | IBM Bob IDE (tasks BOB_TASK_01, BOB_TASK_02) | Implemented and repaired: `src/npm-runner.mjs` (new), plus all existing src/ and test/ files revised |
+| Independent verification and review | Codex | Task 01: 23/23 unit tests pass, demo INCONCLUSIVE on Windows (npm.cmd EINVAL); Task 02 repairs applied by Bob; re-verification pending |
 | Bob consumption-summary screenshots | Actual Bob IDE task output required | Task BOB_TASK_01 completed in this session; screenshot not yet collected |
 | Report viewer and demo recording | Contributor will be recorded when produced | Not started |
 | Demo storyboard and independent comparator evaluation | Codex | Storyboard drafted; publint/ATTW comparison recorded separately, not PackProof runner results |
@@ -30,6 +30,20 @@ Files created by IBM Bob IDE in this task:
 Frozen consumer contracts under `validation-fixtures/contracts/` were not modified. The Codex manual baseline observations.json was not modified.
 
 No claims of real customer adoption, measured productivity gains, novelty over all existing tools, or contest submission are made at this stage. No paid plan or purchase has been activated.
+
+## Repair summary — Bob task BOB_TASK_02
+
+Files changed by IBM Bob IDE in this task:
+
+- **`src/npm-runner.mjs`** (new) — portable npm discovery via NPM_EXECPATH, node-adjacent npm-cli.js, and POSIX lib/node_modules; never spawns npm.cmd with shell:false; finite timeout for all npm invocations; actionable error when npm-cli.js not found
+- **`src/pack.mjs`** — uses `spawnNpm()`; finite timeout; strict JSON parse with no directory fallback; records `packageName`, `packSignal`, `packTimedOut`, `packError`, `npmCliJs`
+- **`src/install.mjs`** — uses `spawnNpm()`; consumer allocated via `mkdtempSync` in OS `tmpdir()` (outside checkout); hashes copied contract bytes **before** execution; null on hash failure (not empty-string hash); records `contractCopiedSHA256`, `installedPkgName`, `isolationPreconditionMet`, install signal/timeout/error fields; resolves installed package by reading `package.json` from node_modules, verifying path stays inside consumerDir
+- **`src/run-contract.mjs`** — definitive timeout detection via `result.error?.code === 'ETIMEDOUT'` only; raw stdout/stderr preserved (no `trimEnd()`); signal field always set
+- **`src/classify.mjs`** — timeout checked **before** spawn-error; null contractExit without timedOut/error → INCONCLUSIVE (rule 6); external signal → INCONCLUSIVE; packExit null → INCONCLUSIVE; all eight precedence rules documented
+- **`src/runner.mjs`** — run directory named by UUID (not caseName); collision check; archive dir inside runDir; npm cache in OS tmpdir; `contractCopiedSHA256` from installResult (pre-execution); `contractSignal` passed to classify; report filename is `report.json` (fixed); returns `runDir` in result
+- **`src/report.mjs`** — removed file-read of contract (SHA-256 now pre-computed); records `contractCopiedPath`, `contractCopiedSHA256` (null when install skipped); all new fields from pack/install/contract; no dependency on `hash.mjs`
+- **`src/cli.mjs`** — `parseTimeout()` rejects non-digit characters (e.g. `12oops`); demo passes `timeoutMs` from CLI; `mkdirSync` for demo baseOutDir; `artifactDir` parameter; error-caught `runCase` call; shows `RunDir` in output
+- **`test/packproof.test.mjs`** — 40 tests across §1–§10; §10 adds six E2E tests with real npm pack/install (skipped when npm-cli.js unavailable); §9 adds path traversal, repeat run, report-filename regressions; §5 adds null-exit and timeout-reason regressions; §7 adds malformed timeout and zero timeout tests; §8 adds npm-runner unit tests
 
 ## Independent review after task 01
 

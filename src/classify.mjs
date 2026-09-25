@@ -2,12 +2,23 @@
  * Classify a consumer run into one of three outcomes:
  *
  *   PASS          Contract exited 0, no timeout, no infrastructure error.
- *   FAIL          Contract exited non-zero and it was not an infrastructure error.
- *   INCONCLUSIVE  Timeout, runner/infrastructure error, or pack/install failure.
+ *   FAIL          Contract exited non-zero without infrastructure error.
+ *   INCONCLUSIVE  Any infrastructure/runner problem: pack failure, install
+ *                 failure, spawn error, timeout, signal, or unknown completion.
+ *
+ * Classification rules (in order of precedence):
+ *   1. Pack failure         → INCONCLUSIVE
+ *   2. Install failure      → INCONCLUSIVE
+ *   3. Timeout              → INCONCLUSIVE  (before spawn-error check)
+ *   4. Spawn error          → INCONCLUSIVE
+ *   5. Signal (non-timeout) → INCONCLUSIVE
+ *   6. Unknown exit (null)  → INCONCLUSIVE  (unknown completion ≠ pass)
+ *   7. Exit 0               → PASS
+ *   8. Exit non-zero        → FAIL
  *
  * Design note (from BRIEF.md): "Missing reports, skipped checks and timeouts
- * are never passes."  A failing contract is FAIL, not INCONCLUSIVE, even if the
- * failure was intentionally expected by the test design.
+ * are never passes."  An intentionally failing contract is FAIL, not INCONCLUSIVE.
+ * A SIGTERM from a cause other than our own timeout is INCONCLUSIVE.
  */
 
 /** @enum {string} */
@@ -19,10 +30,11 @@ export const Outcome = Object.freeze({
 
 /**
  * @typedef {Object} ClassifyInput
- * @property {number|null} packExit        Exit code from npm pack (null = not run)
- * @property {number|null} installExit     Exit code from npm install (null = not run)
- * @property {number|null} contractExit    Exit code from contract (null = process could not start)
- * @property {boolean}     timedOut        True when the contract was killed by timeout
+ * @property {number|null} packExit        Exit code from npm pack (null = killed/error)
+ * @property {number|null} installExit     Exit code from npm install (null = not run or killed)
+ * @property {number|null} contractExit    Exit code from contract (null = not run/killed/unknown)
+ * @property {boolean}     timedOut        True when the contract was killed by our timeout
+ * @property {string}      contractSignal  Kill signal received by contract process, or ''
  * @property {string}      contractError   Spawn error message, if any (e.g. ENOENT for node)
  */
 
@@ -38,16 +50,16 @@ export const Outcome = Object.freeze({
  * @param {ClassifyInput} input
  * @returns {ClassifyResult}
  */
-export function classify({ packExit, installExit, contractExit, timedOut, contractError }) {
-  // Pack failure
-  if (packExit !== 0) {
+export function classify({ packExit, installExit, contractExit, timedOut, contractSignal = '', contractError = '' }) {
+  // 1. Pack failure
+  if (packExit == null || packExit !== 0) {
     return {
       outcome: Outcome.INCONCLUSIVE,
       reason: `npm pack exited ${packExit}; archive was not produced`,
     };
   }
 
-  // Install failure (null means it was not attempted — treat as failure)
+  // 2. Install failure (null means not attempted or killed)
   if (installExit == null || installExit !== 0) {
     return {
       outcome: Outcome.INCONCLUSIVE,
@@ -55,15 +67,7 @@ export function classify({ packExit, installExit, contractExit, timedOut, contra
     };
   }
 
-  // Contract process could not start (e.g. node not found, contract.mjs missing)
-  if (contractError && contractExit === null) {
-    return {
-      outcome: Outcome.INCONCLUSIVE,
-      reason: `Contract process failed to start: ${contractError}`,
-    };
-  }
-
-  // Timeout — never a pass regardless of intent
+  // 3. Timeout — must be checked BEFORE generic spawn error (a timeout also sets an error)
   if (timedOut) {
     return {
       outcome: Outcome.INCONCLUSIVE,
@@ -71,7 +75,31 @@ export function classify({ packExit, installExit, contractExit, timedOut, contra
     };
   }
 
-  // Contract ran to completion
+  // 4. Spawn error (process could not start or had an infrastructure error)
+  if (contractError && contractExit === null) {
+    return {
+      outcome: Outcome.INCONCLUSIVE,
+      reason: `Contract process could not start or had an infrastructure error: ${contractError}`,
+    };
+  }
+
+  // 5. Signal from a cause other than our timeout (e.g. OOM kill, external SIGTERM)
+  if (contractSignal && contractExit === null) {
+    return {
+      outcome: Outcome.INCONCLUSIVE,
+      reason: `Contract terminated by signal ${contractSignal}`,
+    };
+  }
+
+  // 6. Unknown completion (null exit without any of the above — do not treat as pass)
+  if (contractExit === null) {
+    return {
+      outcome: Outcome.INCONCLUSIVE,
+      reason: 'Contract exit code unknown (null); completion unverified',
+    };
+  }
+
+  // 7. Contract ran to completion with exit 0
   if (contractExit === 0) {
     return {
       outcome: Outcome.PASS,
@@ -79,6 +107,7 @@ export function classify({ packExit, installExit, contractExit, timedOut, contra
     };
   }
 
+  // 8. Non-zero exit — genuine contract failure (e.g. assertion, wrong expectation, ENOENT)
   return {
     outcome: Outcome.FAIL,
     reason: `Contract exited ${contractExit}`,

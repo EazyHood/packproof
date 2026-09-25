@@ -5,61 +5,33 @@
  *
  * The report captures everything needed to reproduce the observation:
  * - tool versions and environment
- * - archive identity (path, SHA-256, packed file list)
- * - install identity
- * - contract identity (path, SHA-256)
- * - contract execution (stdout, stderr, exit, timeout)
+ * - archive identity (path, SHA-256, packed file list, package name)
+ * - install identity (consumer dir, isolation flag, symlink check)
+ * - contract identity: the SHA-256 is from the COPIED contract (the bytes
+ *   that were actually executed), not the original file; recorded before
+ *   execution in installTarball(). Read failures become null, not the hash
+ *   of an empty string.
+ * - contract execution (stdout, stderr, exit, signal, timeout)
  * - outcome classification (PASS / FAIL / INCONCLUSIVE) with reason
  *
  * No fabricated durations, success values, or measured ROI.
  */
 
-import { writeFileSync, mkdirSync, readFileSync } from 'node:fs';
+import { writeFileSync, mkdirSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
-import { sha256String } from './hash.mjs';
 
 export const REPORT_SCHEMA_VERSION = 'packproof-report-v1';
 
 /**
- * @typedef {Object} ReportInput
- * @property {string}      runId           Unique run identifier (e.g. UUID or timestamp slug)
- * @property {string}      caseName        Human label for this check (e.g. 'missing-template-operation')
- * @property {string}      fixtureDir      Absolute path to the fixture source directory
- * @property {string}      contractFile    Absolute path to the original contract file
- * @property {string|null} tarballPath     Absolute path to the packed .tgz (null if pack failed)
- * @property {string|null} archiveSHA256   SHA-256 of tarball (null if pack failed)
- * @property {string[]}    packedFiles     Files listed inside the archive
- * @property {number}      packExit        npm pack exit code
- * @property {string}      packStdout      npm pack stdout
- * @property {string}      packStderr      npm pack stderr
- * @property {string}      npmVersion      npm version string
- * @property {string}      nodeVersion     Node.js version string
- * @property {string|null} consumerDir     Absolute path to consumer dir (null if pack failed)
- * @property {string|null} installedPkgDir Installed package directory (best-effort)
- * @property {boolean}     installedIsSymlink True if the install used a symlink
- * @property {number|null} installExit     npm install exit code (null if pack failed)
- * @property {string}      installStdout   npm install stdout
- * @property {string}      installStderr   npm install stderr
- * @property {number|null} contractExit    Contract exit code
- * @property {string}      contractStdout  Contract stdout
- * @property {string}      contractStderr  Contract stderr
- * @property {boolean}     timedOut        Whether the contract was killed by timeout
- * @property {number}      timeoutMs       The timeout ceiling used
- * @property {string}      contractRunError Spawn error, if any
- * @property {string}      outcome         'PASS' | 'FAIL' | 'INCONCLUSIVE'
- * @property {string}      outcomeReason   Human-readable reason
- * @property {string}      recordedAt      ISO-8601 timestamp
- */
-
-/**
  * Build the report object (does not write to disk).
  *
- * @param {ReportInput} input
+ * The contractCopiedSHA256 field is passed in from installResult (hashed before
+ * execution).  This function no longer reads any file.
+ *
+ * @param {Object} input
  * @returns {Object}  Versioned report object
  */
 export function buildReport(input) {
-  const contractSHA256 = input.contractFile ? sha256String(readContractSource(input.contractFile)) : null;
-
   return {
     $schema: REPORT_SCHEMA_VERSION,
     runId: input.runId,
@@ -71,28 +43,43 @@ export function buildReport(input) {
       npm: input.npmVersion,
       platform: process.platform,
       arch: process.arch,
+      npmCliJs: input.npmCliJs ?? null,
     },
     archive: {
       fixtureDir: input.fixtureDir,
       tarballPath: input.tarballPath,
       archiveSHA256: input.archiveSHA256,
+      packageName: input.packageName ?? null,
       packedFiles: input.packedFiles,
       packExit: input.packExit,
+      packSignal: input.packSignal ?? '',
+      packTimedOut: input.packTimedOut ?? false,
+      packError: input.packError ?? '',
       packStdout: input.packStdout,
       packStderr: input.packStderr,
     },
     consumer: {
       consumerDir: input.consumerDir,
+      isolationPreconditionMet: input.isolationPreconditionMet ?? null,
       installedPkgDir: input.installedPkgDir,
+      installedPkgName: input.installedPkgName ?? null,
       installedIsSymlink: input.installedIsSymlink,
       installExit: input.installExit ?? null,
+      installSignal: input.installSignal ?? '',
+      installTimedOut: input.installTimedOut ?? false,
+      installError: input.installError ?? '',
       installStdout: input.installStdout,
       installStderr: input.installStderr,
     },
     contract: {
+      // Original contract file path (for reference)
       contractFile: input.contractFile,
-      contractSHA256,
+      // Path and SHA-256 of the COPY that was actually executed
+      contractCopiedPath: input.contractCopiedPath ?? null,
+      // Hashed before execution in installTarball(); null if copy or hash failed
+      contractCopiedSHA256: input.contractCopiedSHA256 ?? null,
       exitCode: input.contractExit,
+      signal: input.contractSignal ?? '',
       stdout: input.contractStdout,
       stderr: input.contractStderr,
       timedOut: input.timedOut,
@@ -116,16 +103,4 @@ export function writeReport(report, outPath) {
   outPath = resolve(outPath);
   mkdirSync(dirname(outPath), { recursive: true });
   writeFileSync(outPath, JSON.stringify(report, null, 2) + '\n', 'utf8');
-}
-
-// ---------------------------------------------------------------------------
-// Internal helpers
-// ---------------------------------------------------------------------------
-
-function readContractSource(contractFile) {
-  try {
-    return readFileSync(contractFile, 'utf8');
-  } catch {
-    return '';
-  }
 }
