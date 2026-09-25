@@ -4,9 +4,11 @@
  *   1. Create a unique run subdirectory under the artifact parent
  *   2. Pack the fixture directory into an archive (in the run dir)
  *   3. Install the archive into a fresh isolated consumer in OS tmpdir
- *   4. Run the consumer contract with a bounded timeout
- *   5. Classify the outcome (PASS / FAIL / INCONCLUSIVE)
- *   6. Build and write the versioned JSON report (in the run dir)
+ *   4. Verify isolation, identity and contract integrity prerequisites
+ *   5. Run the consumer contract (blocked when required prerequisites fail)
+ *   6. Re-check contract hash after execution
+ *   7. Classify the outcome (PASS / FAIL / INCONCLUSIVE)
+ *   8. Build and write the versioned JSON report (in the run dir)
  *
  * Isolation: archive directories live under the artifact parent (inside the
  * project checkout is fine); consumer directories are allocated in OS tmpdir
@@ -14,26 +16,47 @@
  *
  * Safety: caseName is a metadata label only — it NEVER controls filesystem
  * paths.  The run directory is named by the runId (UUID), not the caseName.
+ *
+ * Prerequisites (isolation, identity, contractHash) are required for PASS.
+ * If any fails, the overall outcome is INCONCLUSIVE even when contract exit is 0.
+ * Contract process exit and stdout/stderr are preserved in the report regardless.
+ *
+ * Source baseline: when runSourceBaseline: true is passed, runner executes
+ * validation-fixtures/source-tests.test.mjs via Node with a bound and records
+ * the result separately.  This is not a consumer run; it does not affect
+ * individual case outcomes.  In single-case mode without the flag, the source
+ * baseline is marked 'not-run', never PASS.
  */
 
 import { mkdirSync, existsSync } from 'node:fs';
-import { join, resolve, basename } from 'node:path';
+import { join, resolve, basename, dirname } from 'node:path';
 import { randomUUID } from 'node:crypto';
 import { tmpdir } from 'node:os';
+import { spawnSync } from 'node:child_process';
+import { fileURLToPath } from 'node:url';
 
 import { packFixture } from './pack.mjs';
 import { installTarball } from './install.mjs';
 import { runContract, DEFAULT_TIMEOUT_MS } from './run-contract.mjs';
 import { classify } from './classify.mjs';
+import { verifyRun } from './verify.mjs';
 import { buildReport, writeReport } from './report.mjs';
+import { sha256File } from './hash.mjs';
+
+const __filename = fileURLToPath(import.meta.url);
+const PROJECT_ROOT = resolve(dirname(__filename), '..');
+
+/** Timeout for the source baseline test run (ms). */
+const SOURCE_BASELINE_TIMEOUT_MS = 30_000;
 
 /**
  * @typedef {Object} RunCaseOptions
- * @property {string}  fixtureDir    Absolute or relative path to the fixture directory
- * @property {string}  contractFile  Absolute or relative path to the contract .mjs file
- * @property {string}  artifactDir   Parent directory where the unique run subdirectory is created
- * @property {string}  [caseName]    Metadata label only (default: <fixture>+<contract>)
- * @property {number}  [timeoutMs]   Contract timeout in ms (default 15 000)
+ * @property {string}  fixtureDir          Absolute or relative path to the fixture directory
+ * @property {string}  contractFile        Absolute or relative path to the contract .mjs file
+ * @property {string}  artifactDir         Parent directory where the unique run subdirectory is created
+ * @property {string}  [caseName]          Metadata label only (default: <fixture>+<contract>)
+ * @property {number}  [timeoutMs]         Contract timeout in ms (default 15 000)
+ * @property {boolean} [runSourceBaseline] Run source-tests.test.mjs and record result (default false)
  */
 
 /**
@@ -58,6 +81,7 @@ export function runCase(options) {
     artifactDir: artifactDirRaw,
     caseName: caseNameOpt,
     timeoutMs = DEFAULT_TIMEOUT_MS,
+    runSourceBaseline = false,
   } = options;
 
   const fixtureDir = resolve(fixtureDirRaw);
@@ -71,7 +95,6 @@ export function runCase(options) {
   // Create a unique run directory under the artifact parent
   const runDir = join(artifactDir, runId);
   if (existsSync(runDir)) {
-    // Collision with an existing run — should never happen with UUID
     throw new Error(`Run directory already exists: ${runDir}`);
   }
   mkdirSync(runDir, { recursive: true });
@@ -115,7 +138,6 @@ export function runCase(options) {
       tarballPath: packResult.tarballPath,
       contractPath: contractFile,
       cacheDir,
-      // runTmpDir: use OS default (tmpdir()); can be overridden for tests
     });
   }
 
@@ -123,7 +145,25 @@ export function runCase(options) {
     !installResult.installTimedOut &&
     !installResult.installError;
 
-  // ── Step 3: Run contract (only if install succeeded) ──────────────────────────
+  // ── Step 3: Verify prerequisites ─────────────────────────────────────────────
+  let verifyResult = null;
+  if (installSucceeded) {
+    verifyResult = verifyRun({
+      consumerDir: installResult.consumerDir,
+      fixtureDir,
+      installedPkgDir: installResult.installedPkgDir,
+      installedPkgName: installResult.installedPkgName,
+      expectedPackageName: packResult.packageName,
+      installedIsSymlink: installResult.installedIsSymlink,
+      contractCopiedPath: installResult.contractCopiedPath,
+      contractCopiedSHA256: installResult.contractCopiedSHA256,
+    });
+  }
+
+  // Required prerequisites: if any fail, skip contract execution
+  const prereqsMet = verifyResult !== null && verifyResult.allRequired;
+
+  // ── Step 4: Run contract (only if install succeeded AND prerequisites pass) ────
   let contractResult = {
     exitCode: null,
     stdout: '',
@@ -131,21 +171,46 @@ export function runCase(options) {
     timedOut: false,
     signal: '',
     error: packSucceeded
-      ? (installSucceeded ? '' : 'Skipped: install failed')
+      ? (installSucceeded
+          ? (prereqsMet ? '' : `Skipped: prerequisite check failed — ${verifyResult?.failureReason}`)
+          : 'Skipped: install failed')
       : 'Skipped: pack failed',
+    elapsedMs: 0,
   };
 
-  if (packSucceeded && installSucceeded) {
+  if (packSucceeded && installSucceeded && prereqsMet) {
     contractResult = runContract({
       consumerDir: installResult.consumerDir,
       timeoutMs,
     });
   }
 
-  // ── Step 4: Classify ──────────────────────────────────────────────────────────
+  // ── Step 5: Post-execution contract hash check ────────────────────────────────
+  // Re-run contractHash verification after execution; pass updated result to report.
+  let verifyAfter = null;
+  if (verifyResult !== null) {
+    // Re-verify contractHash (other checks are not repeated — they check static state)
+    const postHashCheck = recheckContractHash({
+      contractCopiedPath: installResult.contractCopiedPath,
+      contractCopiedSHA256: installResult.contractCopiedSHA256,
+    });
+    verifyAfter = { ...verifyResult, contractHashAfter: postHashCheck };
+  }
+
+  // ── Step 6: Classify ──────────────────────────────────────────────────────────
   const packExitForClassify = packResult.packExit ?? (packResult.packTimedOut ? null : 1);
   const installExitForClassify = packSucceeded
     ? (installResult.installExit ?? (installResult.installTimedOut ? null : 1))
+    : null;
+
+  // Prerequisite failures (isolation, identity, contractHash) block PASS
+  const prereqFailure = verifyResult !== null && !verifyResult.allRequired
+    ? verifyResult.failureReason
+    : null;
+
+  // Changed contract after execution — also blocks PASS
+  const contractHashChanged = verifyAfter?.contractHashAfter?.status === 'fail'
+    ? verifyAfter.contractHashAfter.reason
     : null;
 
   const { outcome, reason } = classify({
@@ -155,10 +220,16 @@ export function runCase(options) {
     timedOut: contractResult.timedOut,
     contractSignal: contractResult.signal,
     contractError: contractResult.error,
+    prereqFailure,
+    contractHashChanged,
   });
 
-  // ── Step 5: Build and write report ────────────────────────────────────────────
-  // contractCopiedSHA256 comes from installResult — it was hashed BEFORE execution
+  // ── Step 7: Source baseline (optional) ────────────────────────────────────────
+  const sourceBaseline = runSourceBaseline
+    ? runSourceBaselineCheck(timeoutMs)
+    : { status: 'not-run', reason: 'Source baseline not requested in single-case mode' };
+
+  // ── Step 8: Build and write report ────────────────────────────────────────────
   const reportInput = {
     runId,
     caseName,
@@ -190,16 +261,19 @@ export function runCase(options) {
     installError: installResult.installError,
     installStdout: installResult.installStdout,
     installStderr: installResult.installStderr,
+    verify: verifyAfter ?? verifyResult,
     contractExit: contractResult.exitCode,
     contractSignal: contractResult.signal,
     contractStdout: contractResult.stdout,
     contractStderr: contractResult.stderr,
     timedOut: contractResult.timedOut,
+    contractElapsedMs: contractResult.elapsedMs,
     timeoutMs,
     contractRunError: contractResult.error,
     outcome,
     outcomeReason: reason,
     recordedAt,
+    sourceBaseline,
   };
 
   const report = buildReport(reportInput);
@@ -208,4 +282,92 @@ export function runCase(options) {
   writeReport(report, reportPath);
 
   return { outcome, reason, reportPath, runDir, report };
+}
+
+// ---------------------------------------------------------------------------
+// Internal helpers
+// ---------------------------------------------------------------------------
+
+/**
+ * Re-check the contract hash post-execution.
+ * Returns a CheckResult-shaped object.
+ */
+function recheckContractHash({ contractCopiedPath, contractCopiedSHA256 }) {
+  if (!contractCopiedPath || contractCopiedSHA256 === null) {
+    return { status: 'skipped', reason: 'Pre-execution hash not available; cannot compare after' };
+  }
+  if (!existsSync(contractCopiedPath)) {
+    return { status: 'fail', reason: `Contract copy no longer exists after execution: ${contractCopiedPath}` };
+  }
+  let hashAfter;
+  try {
+    hashAfter = sha256File(contractCopiedPath);
+  } catch (e) {
+    return { status: 'error', reason: `Cannot hash contract after execution: ${e.message}` };
+  }
+  if (hashAfter !== contractCopiedSHA256) {
+    return {
+      status: 'fail',
+      reason: `Contract bytes changed during execution: before=${contractCopiedSHA256} after=${hashAfter}`,
+    };
+  }
+  return { status: 'pass', reason: `Contract bytes unchanged after execution: ${contractCopiedSHA256}` };
+}
+
+/**
+ * Execute the frozen source-tests.test.mjs baseline and return a record.
+ * The result is stored as separate evidence; it does not change consumer outcomes.
+ *
+ * @param {number} boundMs  Timeout for the baseline run
+ * @returns {Object}
+ */
+function runSourceBaselineCheck(boundMs = SOURCE_BASELINE_TIMEOUT_MS) {
+  const scriptPath = join(PROJECT_ROOT, 'validation-fixtures', 'source-tests.test.mjs');
+
+  if (!existsSync(scriptPath)) {
+    return {
+      status: 'error',
+      reason: `source-tests.test.mjs not found: ${scriptPath}`,
+      command: null, scriptHash: null, exit: null, stdout: '', stderr: '', durationMs: null,
+      recordedAt: new Date().toISOString(),
+    };
+  }
+
+  let scriptHash = null;
+  try {
+    scriptHash = sha256File(scriptPath);
+  } catch { /* leave null */ }
+
+  const command = [process.execPath, '--test', '--test-reporter=tap', scriptPath];
+  const startMs = Date.now();
+
+  const r = spawnSync(process.execPath, ['--test', '--test-reporter=tap', scriptPath], {
+    encoding: 'utf8',
+    shell: false,
+    timeout: boundMs,
+    killSignal: 'SIGKILL',
+    env: { ...process.env, NODE_PATH: '', NODE_OPTIONS: '' },
+  });
+
+  const durationMs = Date.now() - startMs;
+  const timedOut = r.error?.code === 'ETIMEDOUT';
+  const exit = r.status;
+
+  let status;
+  if (timedOut) status = 'timeout';
+  else if (exit === 0) status = 'pass';
+  else status = 'fail';
+
+  return {
+    status,
+    command,
+    scriptPath,
+    scriptHash,
+    exit,
+    stdout: r.stdout || '',
+    stderr: r.stderr || '',
+    durationMs,
+    timedOut,
+    recordedAt: new Date().toISOString(),
+  };
 }

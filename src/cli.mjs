@@ -245,7 +245,10 @@ function runDemo(values, timeoutMs) {
         contractFile,
         artifactDir: baseOutDir,
         caseName: c.caseName,
-        timeoutMs,           // passed through from CLI; demo honours --timeout
+        timeoutMs,
+        // Only the first case in the demo runs the source baseline to avoid
+        // running it six times.  It is linked from the demo summary separately.
+        runSourceBaseline: summary.length === 0,
       });
     } catch (err) {
       process.stdout.write(' ERROR\n');
@@ -270,6 +273,7 @@ function runDemo(values, timeoutMs) {
       outcome: result.outcome,
       expectedOutcome: c.expectedOutcome,
       observedAsExpected,
+      sourceBaseline: summary.length === 0 ? result.report.sourceBaseline : null,
     });
   }
 
@@ -279,6 +283,23 @@ function runDemo(values, timeoutMs) {
     process.stdout.write(
       `  ${marker}  ${s.caseName.padEnd(34)} ${s.outcome} (expected ${s.expectedOutcome})\n`
     );
+  }
+
+  // Print source baseline status (recorded once with the first case)
+  const baselineEntry = summary.find((s) => s.sourceBaseline !== null);
+  if (baselineEntry?.sourceBaseline) {
+    const sb = baselineEntry.sourceBaseline;
+    const sbMarker = sb.status === 'pass' ? '✓' : (sb.status === 'not-run' ? '-' : '✗');
+    process.stdout.write(
+      `\n  Source baseline: ${sbMarker} ${sb.status}` +
+      (sb.exit != null ? ` (exit ${sb.exit})` : '') +
+      (sb.durationMs != null ? ` ${sb.durationMs}ms` : '') +
+      '\n'
+    );
+    if (sb.status !== 'pass' && sb.status !== 'not-run') {
+      process.stdout.write(`    ${sb.reason || ''}\n`);
+      exitCode = 1;
+    }
   }
   process.stdout.write('\n');
 

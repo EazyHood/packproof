@@ -23,7 +23,7 @@
 
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { mkdtempSync, writeFileSync, rmSync, readFileSync, existsSync } from 'node:fs';
+import { mkdtempSync, mkdirSync, writeFileSync, rmSync, readFileSync, existsSync } from 'node:fs';
 import { join, resolve, dirname } from 'node:path';
 import { tmpdir } from 'node:os';
 import { fileURLToPath } from 'node:url';
@@ -438,14 +438,12 @@ test('npm-runner: getNpmVersion returns string or null, does not throw', async (
 // §9. Runner safety
 // ---------------------------------------------------------------------------
 
-test('runner: caseName with path traversal does not affect run directory path', async () => {
-  // The run directory must be inside artifactDir (named by UUID), not outside it.
-  // We verify that runDir starts with artifactDir.
+test('runner: caseName with path traversal does not affect run directory path', async (t) => {
   const { runCase } = await import('../src/runner.mjs');
   const { findNpmCliJs } = await import('../src/npm-runner.mjs');
 
   if (!findNpmCliJs()) {
-    // Skip: npm not available
+    t.skip('npm-cli.js not found; skipping integration test');
     return;
   }
 
@@ -476,11 +474,11 @@ test('runner: caseName with path traversal does not affect run directory path', 
   }
 });
 
-test('runner: repeated artifactDir produces separate run directories (no overwrite)', async () => {
+test('runner: repeated artifactDir produces separate run directories (no overwrite)', async (t) => {
   const { runCase } = await import('../src/runner.mjs');
   const { findNpmCliJs } = await import('../src/npm-runner.mjs');
 
-  if (!findNpmCliJs()) return;
+  if (!findNpmCliJs()) { t.skip('npm-cli.js not found'); return; }
 
   const tmp = makeTmpDir('packproof-repeat-');
   try {
@@ -508,11 +506,11 @@ test('runner: repeated artifactDir produces separate run directories (no overwri
   }
 });
 
-test('runner: report filename is always report.json (not derived from caseName)', async () => {
+test('runner: report filename is always report.json (not derived from caseName)', async (t) => {
   const { runCase } = await import('../src/runner.mjs');
   const { findNpmCliJs } = await import('../src/npm-runner.mjs');
 
-  if (!findNpmCliJs()) return;
+  if (!findNpmCliJs()) { t.skip('npm-cli.js not found'); return; }
 
   const tmp = makeTmpDir('packproof-report-name-');
   try {
@@ -533,17 +531,18 @@ test('runner: report filename is always report.json (not derived from caseName)'
 // §10. End-to-end integration — real npm pack + install + contract execution
 //
 //  These tests run the full pipeline with real npm.  Each case uses a
-//  unique tmpdir so they are independent.  Tests are skipped when npm-cli.js
-//  is not found.  Expected outcomes match the frozen Codex manual baseline.
+//  unique tmpdir so they are independent.  Tests are SKIPPED (t.skip) when
+//  npm-cli.js is not found, so an npm-free host does not count them as passing.
+//  Expected outcomes match the frozen Codex manual baseline.
 // ---------------------------------------------------------------------------
 
-async function runE2E(fixtureName, contractName, expectedOutcome, testSuffix = '') {
+async function runE2E(t, fixtureName, contractName, expectedOutcome, testSuffix = '') {
   const { runCase } = await import('../src/runner.mjs');
   const { findNpmCliJs } = await import('../src/npm-runner.mjs');
 
   if (!findNpmCliJs()) {
-    // npm not available — skip by returning without asserting
-    return;
+    t.skip('npm-cli.js not found; integration test skipped');
+    return null;
   }
 
   const tmp = makeTmpDir(`packproof-e2e-${testSuffix}-`);
@@ -578,45 +577,225 @@ async function runE2E(fixtureName, contractName, expectedOutcome, testSuffix = '
       );
     }
 
+    // Verify block must be present in report
+    assert.ok(result.report.verify !== undefined, 'report must have a verify block');
+
     return result;
   } finally {
     removeTmp(tmp);
   }
 }
 
-test('e2e: missing-template-operation → FAIL (ENOENT for template)', { timeout: 60_000 }, async () => {
-  await runE2E('labels-missing-template', 'label-operation.mjs', 'FAIL', 'mt-op');
+test('e2e: missing-template-operation → FAIL (ENOENT for template)', { timeout: 60_000 }, async (t) => {
+  await runE2E(t, 'labels-missing-template', 'label-operation.mjs', 'FAIL', 'mt-op');
 });
 
-test('e2e: missing-template-import-only → PASS (operationExercised false)', { timeout: 60_000 }, async () => {
-  await runE2E('labels-missing-template', 'label-import-only.mjs', 'PASS', 'mt-io');
+test('e2e: missing-template-import-only → PASS (operationExercised false)', { timeout: 60_000 }, async (t) => {
+  await runE2E(t, 'labels-missing-template', 'label-import-only.mjs', 'PASS', 'mt-io');
 });
 
-test('e2e: fixed-operation → PASS (exact frozen label output)', { timeout: 60_000 }, async () => {
-  const result = await runE2E('labels-fixed', 'label-operation.mjs', 'PASS', 'fx-op');
+test('e2e: fixed-operation → PASS (exact frozen label output)', { timeout: 60_000 }, async (t) => {
+  const result = await runE2E(t, 'labels-fixed', 'label-operation.mjs', 'PASS', 'fx-op');
   if (result) {
-    // Verify the contract stdout contains the frozen label
     assert.ok(
       result.report.contract.stdout.includes('SKU-042 | QTY 12 | BIN B-7'),
       'frozen label must appear in stdout'
     );
+    // verify block must show all required checks pass
+    assert.equal(result.report.verify?.isolation?.status, 'pass', 'isolation check must pass for fixed-operation');
+    assert.equal(result.report.verify?.identity?.status, 'pass', 'identity check must pass for fixed-operation');
   }
 });
 
-test('e2e: fixed-wrong-expectation → FAIL (deliberate wrong assertion)', { timeout: 60_000 }, async () => {
-  await runE2E('labels-fixed', 'label-wrong-expectation.mjs', 'FAIL', 'fx-wrong');
+test('e2e: fixed-wrong-expectation → FAIL (deliberate wrong assertion)', { timeout: 60_000 }, async (t) => {
+  await runE2E(t, 'labels-fixed', 'label-wrong-expectation.mjs', 'FAIL', 'fx-wrong');
 });
 
-test('e2e: broken-export-operation → FAIL (ERR_MODULE_NOT_FOUND)', { timeout: 60_000 }, async () => {
-  await runE2E('labels-broken-export', 'label-operation.mjs', 'FAIL', 'be-op');
+test('e2e: broken-export-operation → FAIL (ERR_MODULE_NOT_FOUND)', { timeout: 60_000 }, async (t) => {
+  // A broken export is the defect being tested — it still runs and produces FAIL
+  const result = await runE2E(t, 'labels-broken-export', 'label-operation.mjs', 'FAIL', 'be-op');
+  if (result) {
+    // Identity check: the broken-export package IS correctly identified (the export is broken, not the name)
+    // The outcome is FAIL because the contract fails, not because of an identity/isolation prerequisite
+    assert.equal(result.outcome, 'FAIL', 'broken export must produce FAIL, not INCONCLUSIVE');
+  }
 });
 
-test('e2e: tally-operation → PASS (totalUnits 11, lineCount 2)', { timeout: 60_000 }, async () => {
-  const result = await runE2E('tally', 'tally-operation.mjs', 'PASS', 'tally-op');
+test('e2e: tally-operation → PASS (totalUnits 11, lineCount 2)', { timeout: 60_000 }, async (t) => {
+  const result = await runE2E(t, 'tally', 'tally-operation.mjs', 'PASS', 'tally-op');
   if (result) {
     assert.ok(
       result.report.contract.stdout.includes('"totalUnits":11'),
       'totalUnits 11 must appear in stdout'
     );
+  }
+});
+
+// ---------------------------------------------------------------------------
+// §11. verify.mjs unit tests and false-PASS regression controls
+// ---------------------------------------------------------------------------
+
+test('verify: isolation fails when consumer is inside fixtureDir', async () => {
+  const { verifyRun } = await import('../src/verify.mjs');
+  const tmp = makeTmpDir('packproof-verify-iso-');
+  try {
+    // Consumer is INSIDE the fixture-like directory
+    const fakeFixture = tmp;
+    const fakeConsumer = join(tmp, 'subdir');
+    writeFileSync(join(tmp, 'package.json'), '{}', 'utf8');
+    mkdirSync(fakeConsumer);
+
+    const result = verifyRun({
+      consumerDir: fakeConsumer,
+      fixtureDir: fakeFixture,
+      installedPkgDir: null,
+      installedPkgName: null,
+      expectedPackageName: null,
+      installedIsSymlink: false,
+      contractCopiedPath: null,
+      contractCopiedSHA256: null,
+    });
+
+    assert.equal(result.isolation.status, 'fail', 'isolation must fail when consumer is inside fixtureDir');
+    assert.equal(result.allRequired, false, 'allRequired must be false on isolation failure');
+  } finally {
+    removeTmp(tmp);
+  }
+});
+
+test('verify: identity fails when installed name does not match expected', async () => {
+  const { verifyRun } = await import('../src/verify.mjs');
+  const tmp = makeTmpDir('packproof-verify-id-');
+  try {
+    const fakePkgDir = join(tmp, 'node_modules', 'actual-pkg');
+    mkdirSync(fakePkgDir, { recursive: true });
+    writeFileSync(join(fakePkgDir, 'package.json'), JSON.stringify({ name: 'actual-pkg' }), 'utf8');
+
+    const result = verifyRun({
+      consumerDir: tmp,
+      fixtureDir: join(tmpdir(), 'some-fixture'),
+      installedPkgDir: fakePkgDir,
+      installedPkgName: 'actual-pkg',
+      expectedPackageName: 'expected-pkg',
+      installedIsSymlink: false,
+      contractCopiedPath: null,
+      contractCopiedSHA256: null,
+    });
+
+    assert.equal(result.identity.status, 'fail', 'identity must fail when names do not match');
+    assert.equal(result.allRequired, false, 'allRequired must be false on identity failure');
+  } finally {
+    removeTmp(tmp);
+  }
+});
+
+test('verify: contractHash fails when hash is null (copy failed)', async () => {
+  const { verifyRun } = await import('../src/verify.mjs');
+  const result = verifyRun({
+    consumerDir: tmpdir(),
+    fixtureDir: join(tmpdir(), 'fixture'),
+    installedPkgDir: null,
+    installedPkgName: null,
+    expectedPackageName: null,
+    installedIsSymlink: false,
+    contractCopiedPath: '/tmp/some-contract.mjs',
+    contractCopiedSHA256: null,  // hash failed at copy time
+  });
+
+  assert.equal(result.contractHash.status, 'fail', 'contractHash must fail when pre-execution hash is null');
+  assert.equal(result.allRequired, false);
+});
+
+test('verify: contractHash fails when bytes changed', async () => {
+  const { verifyRun } = await import('../src/verify.mjs');
+  const tmp = makeTmpDir('packproof-verify-hash-');
+  try {
+    const contractPath = join(tmp, 'contract.mjs');
+    writeFileSync(contractPath, '// original\n', 'utf8');
+
+    // Record hash of original
+    const { sha256File } = await import('../src/hash.mjs');
+    const originalHash = sha256File(contractPath);
+
+    // Simulate contract modifying itself during execution
+    writeFileSync(contractPath, '// changed after execution\n', 'utf8');
+
+    const result = verifyRun({
+      consumerDir: tmpdir(),
+      fixtureDir: join(tmpdir(), 'fixture'),
+      installedPkgDir: null,
+      installedPkgName: null,
+      expectedPackageName: null,
+      installedIsSymlink: false,
+      contractCopiedPath: contractPath,
+      contractCopiedSHA256: originalHash,
+    });
+
+    assert.equal(result.contractHash.status, 'fail', 'contractHash must fail when bytes changed');
+    assert.match(result.contractHash.reason, /changed/i);
+  } finally {
+    removeTmp(tmp);
+  }
+});
+
+test('classify: prereqFailure → INCONCLUSIVE even when contractExit is 0', async () => {
+  // Regression for false-PASS control #1: isolation failure must block PASS
+  const { classify } = await import('../src/classify.mjs');
+  const r = classify({
+    packExit: 0,
+    installExit: 0,
+    contractExit: 0,  // contract exited 0
+    timedOut: false,
+    prereqFailure: 'isolation: consumer is inside fixture source',
+  });
+  assert.equal(r.outcome, 'INCONCLUSIVE', 'isolation failure must yield INCONCLUSIVE even with exit 0');
+  assert.match(r.reason, /prerequisite|isolat/i);
+});
+
+test('classify: contractHashChanged → INCONCLUSIVE even when contractExit is 0', async () => {
+  // Regression for false-PASS control #2: changed contract hash must block PASS
+  const { classify } = await import('../src/classify.mjs');
+  const r = classify({
+    packExit: 0,
+    installExit: 0,
+    contractExit: 0,
+    timedOut: false,
+    contractHashChanged: 'before=AAA after=BBB',
+  });
+  assert.equal(r.outcome, 'INCONCLUSIVE', 'changed contract hash must yield INCONCLUSIVE even with exit 0');
+  assert.match(r.reason, /changed|hash/i);
+});
+
+// ---------------------------------------------------------------------------
+// §12. verify.mjs — ancestor node_modules detection
+// ---------------------------------------------------------------------------
+
+test('verify: ancestor node_modules detection', async () => {
+  const { verifyRun } = await import('../src/verify.mjs');
+  const tmp = makeTmpDir('packproof-ancestor-');
+  try {
+    // Create a fake node_modules one level above the consumer
+    const ancestorNm = join(tmp, 'node_modules');
+    mkdirSync(ancestorNm);
+    writeFileSync(join(ancestorNm, '.keep'), '', 'utf8');
+
+    const consumer = join(tmp, 'consumer-dir');
+    mkdirSync(consumer);
+
+    const result = verifyRun({
+      consumerDir: consumer,
+      fixtureDir: join(tmpdir(), 'fixture-elsewhere'),
+      installedPkgDir: null,
+      installedPkgName: null,
+      expectedPackageName: null,
+      installedIsSymlink: false,
+      contractCopiedPath: null,
+      contractCopiedSHA256: null,
+    });
+
+    assert.equal(result.isolation.status, 'fail', 'ancestor node_modules must fail isolation');
+    assert.match(result.isolation.reason, /ancestor|node_modules/i);
+  } finally {
+    removeTmp(tmp);
   }
 });

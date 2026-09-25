@@ -2,20 +2,21 @@
  * Execute the consumer contract script with a bounded timeout.
  *
  * The contract is run as `node ./contract.mjs` inside the consumer directory.
- * stdout, stderr, exit code and signal are captured.
+ * stdout, stderr, exit code, signal and elapsed duration are captured.
  *
- * Timeout detection: spawnSync sets `result.error.code === 'ETIMEDOUT'` and
- * `result.signal === 'SIGTERM'` when the timeout fires and we sent SIGTERM.
- * We treat the combination (ETIMEDOUT error code) as the definitive timeout
- * indicator.  A SIGTERM arriving from another source (no ETIMEDOUT error) is
- * recorded as a signal-terminated INCONCLUSIVE, not a timeout.
+ * Kill signal: SIGKILL is used instead of SIGTERM.  SIGTERM is catchable by
+ * the child process and may not terminate it on POSIX systems.  SIGKILL cannot
+ * be caught or ignored, and spawnSync enforces the wall-clock limit before
+ * returning.  On Windows, spawnSync ignores killSignal and forcibly terminates
+ * the process tree; SIGKILL is accepted as a valid value on all platforms.
  *
  * Limitations (documented):
- * - SIGTERM is the kill signal; it can be caught by the child.  If a script
- *   traps SIGTERM and continues running, the runner will unblock when spawnSync
- *   returns (it enforces the wall-clock timeout) but the child process may
- *   continue in the background on some platforms.
- * - Descendant processes spawned by the contract are not explicitly killed.
+ * - Descendant processes spawned by the contract are not explicitly killed on
+ *   POSIX.  On Windows, Job Object containment typically terminates children.
+ * - This is not a security sandbox; it is an isolated execution of trusted
+ *   local fixture contracts.
+ * - Only Windows behaviour has been verified by Codex; Linux behaviour is not
+ *   claimed validated as of this task.
  */
 
 import { spawnSync } from 'node:child_process';
@@ -27,12 +28,13 @@ export const DEFAULT_TIMEOUT_MS = 15_000;
 
 /**
  * @typedef {Object} ContractResult
- * @property {number|null} exitCode   Exit code; null if killed or process could not start
- * @property {string}      stdout     Captured stdout (raw, not trimmed)
- * @property {string}      stderr     Captured stderr (raw, not trimmed)
- * @property {boolean}     timedOut   True when OUR timeout killed the process (ETIMEDOUT)
- * @property {string}      signal     Signal name if process was killed by a signal, else ''
- * @property {string}      error      Spawn/infrastructure error message, else ''
+ * @property {number|null} exitCode    Exit code; null if killed or process could not start
+ * @property {string}      stdout      Captured stdout (raw, not trimmed)
+ * @property {string}      stderr      Captured stderr (raw, not trimmed)
+ * @property {boolean}     timedOut    True when OUR timeout killed the process (ETIMEDOUT)
+ * @property {string}      signal      Signal name if process was killed by a signal, else ''
+ * @property {string}      error       Spawn/infrastructure error message, else ''
+ * @property {number}      elapsedMs   Wall-clock milliseconds from spawn to return
  */
 
 /**
@@ -54,8 +56,11 @@ export function runContract({ consumerDir, timeoutMs = DEFAULT_TIMEOUT_MS }) {
       timedOut: false,
       signal: '',
       error: `Consumer directory not found: ${consumerDir}`,
+      elapsedMs: 0,
     };
   }
+
+  const startMs = Date.now();
 
   const result = spawnSync(
     process.execPath,         // same Node.js binary as the runner
@@ -64,7 +69,7 @@ export function runContract({ consumerDir, timeoutMs = DEFAULT_TIMEOUT_MS }) {
       cwd: consumerDir,
       encoding: 'utf8',
       timeout: timeoutMs,
-      killSignal: 'SIGTERM',
+      killSignal: 'SIGKILL',  // uncatchable; replaces SIGTERM for hard termination
       shell: false,
       env: {
         ...process.env,
@@ -76,9 +81,11 @@ export function runContract({ consumerDir, timeoutMs = DEFAULT_TIMEOUT_MS }) {
     }
   );
 
+  const elapsedMs = Date.now() - startMs;
+
   // Definitive timeout: spawnSync sets error.code === 'ETIMEDOUT' when it fires.
-  // Do not rely on SIGTERM alone — an external SIGTERM would also set signal='SIGTERM'
-  // but would NOT set error.code === 'ETIMEDOUT'.
+  // SIGKILL in the signal field alongside ETIMEDOUT confirms our kill, not an
+  // external signal (external SIGKILL would set signal but NOT set ETIMEDOUT).
   const timedOut = result.error?.code === 'ETIMEDOUT';
 
   const signal = result.signal || '';
@@ -91,5 +98,6 @@ export function runContract({ consumerDir, timeoutMs = DEFAULT_TIMEOUT_MS }) {
     timedOut,
     signal,
     error: errorMsg,
+    elapsedMs,
   };
 }

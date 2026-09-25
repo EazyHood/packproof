@@ -71,6 +71,7 @@ export function buildReport(input) {
       installStdout: input.installStdout,
       installStderr: input.installStderr,
     },
+    verify: input.verify ?? null,
     contract: {
       // Original contract file path (for reference)
       contractFile: input.contractFile,
@@ -83,6 +84,7 @@ export function buildReport(input) {
       stdout: input.contractStdout,
       stderr: input.contractStderr,
       timedOut: input.timedOut,
+      elapsedMs: input.contractElapsedMs ?? null,
       timeoutMs: input.timeoutMs,
       error: input.contractRunError,
     },
@@ -90,6 +92,9 @@ export function buildReport(input) {
       outcome: input.outcome,
       reason: input.outcomeReason,
     },
+    // Source baseline is a separate evidence record, not a consumer run.
+    // 'not-run' when no source baseline was requested; never null.
+    sourceBaseline: input.sourceBaseline ?? { status: 'not-run', reason: 'Not recorded' },
   };
 }
 
