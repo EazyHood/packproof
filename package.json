@@ -1,0 +1,21 @@
+{
+  "name": "packproof",
+  "version": "0.1.0",
+  "description": "Turn a package archive and an explicit consumer contract into a reproducible observation with recorded errors and an archive hash.",
+  "type": "module",
+  "exports": "./src/runner.mjs",
+  "bin": {
+    "packproof": "./src/cli.mjs"
+  },
+  "scripts": {
+    "test": "node --test --test-reporter=tap ./test/packproof.test.mjs",
+    "test:verbose": "node --test --test-reporter=spec ./test/packproof.test.mjs"
+  },
+  "engines": {
+    "node": ">=24"
+  },
+  "files": [
+    "src"
+  ],
+  "license": "MIT"
+}
