@@ -1,0 +1,28 @@
+# Bob task 02 — repair the real pipeline and its evidence
+
+Your first implementation is preserved in commit 3ab678e. Read BOB_REVIEW_01.md, BRIEF.md, PROVENANCE.md and your current source/tests. Codex independently ran the original version: 23 tests pass, but all six real demo cases stop at npm pack on Windows. Implement corrections and meaningful regression tests, not just recommendations.
+
+Continue with native file reading/editing tools only inside this workspace. Do not execute terminal/shell commands, access parent directories or credentials, install anything, publish, or spend beyond the existing sponsored Bob allocation. Codex will execute validation independently. Do not claim unexecuted tests passed. Preserve every frozen file under validation-fixtures and its existing evidence.
+
+## Required corrections, in priority order
+
+1. **Portable npm execution with actionable errors.** On this host, `npm.cmd` cannot run with spawnSync shell:false (EINVAL). Prefer executing a verified npm-cli.js with process.execPath and an argument array, shell:false. Support a validated explicit npm CLI path and sensible Windows/Linux discovery (including npm_execpath when appropriate); fail clearly if unavailable. Never interpolate user paths into a shell command or switch blindly to shell:true. Preserve actual error code/message, nullable exit code, signal and timeout for each process. Apply finite timeouts to pack/install/version as well as contracts; preserve raw stdout/stderr and honest elapsed time.
+
+2. **Fresh runs and contained output.** Treat --out as an artifact parent and create a unique child per run, or reject occupied runs; never overwrite prior evidence or delete existing folders. Store caseName only as metadata; use fixed report.json or a generated safe identifier for filenames. Create each consumer in a newly allocated OS temporary directory outside the source checkout, with no ancestor node_modules candidates; if an isolation precondition cannot be satisfied, report it as INCONCLUSIVE. Keep temporary paths and failures inspectable without automatic cleanup. Preserve CLI return paths accurately.
+
+3. **Bind evidence to the artifact and executed contract.** Validate npm pack metadata and the newly produced named archive strictly; no fallback to any old .tgz. Record the actual package name from metadata/manifest, not the first node_modules entry. Verify the installed package's real path stays inside this consumer and is not a symlink to source; record public entry resolution (not proof of execution). Verify relevant installed file bytes against that archive, or explicitly report unverified evidence rather than claiming isolation/integrity. Keep the original trusted contract unchanged, hash bytes of the copied executed contract before execution, verify after execution, and report missing/changed bytes as inconclusive evidence. Hash read failures must not become hashes of an empty string. This is trusted local execution, not a security sandbox.
+
+4. **Honest classifications and robust CLI validation.** PASS requires successful pack/install/evidence prerequisites and contract exit 0 without timeout/spawn error/signal. Nonzero contract exits are FAIL; skipped work, unknown completion, signals, infrastructure errors and timeouts are INCONCLUSIVE. Give timeout its own reason before generic error handling. Do not confuse SIGTERM from another cause with an elapsed timeout. Require --timeout to be an entire finite positive integer; apply it consistently in both CLI modes. Record signals and errors in reports. Use a termination approach that does not rely solely on catchable SIGTERM for a bounded direct child; document remaining descendant-process limitations.
+
+5. **Source baseline and real integration coverage.** The demo should execute and separately record the frozen `validation-fixtures/source-tests.test.mjs` baseline with command, exit, raw output, duration and hash; do not replace it with a historical success constant. A general single-case report can mark a source baseline not requested, distinctly from passing. Add actual offline end-to-end tests for the six frozen cases using real npm pack/install, unique directories and the fixed contracts. Include focused regressions for repeated --out, case-label traversal, malformed timeout, missing tool/input, timeout classification and copied-contract hash. Do not mock the whole pipeline or weaken frozen expectations. Keep negative contract outcomes FAIL even when the demo expects them.
+
+6. **Documentation and attribution.** Update package scripts/tests as needed, write a compact README with real commands and limits, and record your changes in PROVENANCE.md. Credit the Codex fixture packaging repair and independent review separately from your implementation. Do not claim Linux tested, comparison superiority, customer adoption or screenshot evidence. Leave the report viewer and presentation to a later task.
+
+The isolation instruction above explicitly clarifies the earlier brief: artifact reports may be under the requested output parent; executable consumers must be fresh outside the checkout. Do not achieve a green demo by disabling isolation, trusting stale files or changing contracts. If a requirement remains incomplete, state it plainly and identify the exact code path.
+
+## Finish with
+
+- Files changed and a concise explanation of the actual repair.
+- Exact validation commands for Codex (including full demo and tests).
+- Known limitations and any work still incomplete.
+- Genuine task consumption summary available for Jhona to capture; never fabricate an image, usage number or test result.
