@@ -17,6 +17,8 @@ A small npm library maintainer needs to know whether the archive users install s
 
 ## Demo fixtures and controls
 
+Independent audit note: `import.meta.resolve()` can return a nonexistent export target. It is useful for tracing resolution but is not proof that an import succeeded. Execute the actual consumer operation. Likewise, `observedAsExpected: true` means a test control behaved as predicted; a deliberately failing contract still has a FAIL outcome.
+
 Create all fixture code during this event. Use fictional inventory labels and no personal data.
 
 1. A small ESM label library loads a template adjacent to its source. Source tests pass. Its broken packaging omits the template and the consumer's real operation fails. A fixed variant includes it and yields the exact same specified output. The consumer expectation must not be weakened to make the fix pass.
