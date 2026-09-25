@@ -27,6 +27,8 @@ Create all fixture code during this event. Use fictional inventory labels and no
 4. An intentionally wrong consumer expectation remains a failure even after fixing the archive.
 5. Missing or invalid input and a deliberately hanging contract produce clear non-success outcomes and terminate within a bounded time.
 
+Independent comparator observations, 25 September: Codex ran publint 0.3.24 and ATTW CLI 0.18.5 against the four exact preserved reference archives. publint detected the nonexistent export, reported no diagnostics for the missing-template and fixed variants, and suggested an explicit `type: commonjs` for tally. ATTW reported `types: false` for all four archives; its zero exit code is not a passed resolution analysis. These observations are not PackProof results. The manual consumer already detects the missing template, so the runner's proposed value is repeatable execution and organized evidence, not inventing tarball tests or outperforming every existing tool. Preserve these distinctions in documentation and reports.
+
 Use isolated disposable run directories under the project. Never delete user files or unrelated directories. Make cleanup optional initially; keep failures inspectable. No network dependencies in fixture packages. Escape output when later presenting report content in HTML.
 
 ## Responsibility and provenance

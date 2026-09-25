@@ -6,9 +6,10 @@ Started during the IBM Bob 2.0 build window, 25 September 2026 (Colombia time).
 |---|---|---|
 | Planning brief and acceptance criteria | Codex, based on official event materials and prior planning | Written |
 | Independent fixture packages and consumer reference contracts | Codex, separately attributed under validation-fixtures | Written; 5 source tests passed and 6 manual consumer cases observed as expected |
-| PackProof CLI, archive/report pipeline and substantive implementation | IBM Bob IDE intended | Not started; IDE startup dialog blocks use |
+| PackProof CLI, archive/report pipeline and substantive implementation | IBM Bob IDE intended | Not started; workspace open, awaiting user workspace trust and completed IDE sign-in |
 | Independent verification and review | Codex | Reference baseline executed; PackProof implementation verification pending |
 | Bob consumption-summary screenshots | Actual Bob IDE task output required | None collected yet |
-| Report viewer, demo recording and submission assets | Contributor will be recorded when produced | Not started |
+| Report viewer and demo recording | Contributor will be recorded when produced | Not started |
+| Demo storyboard and independent comparator evaluation | Codex | Storyboard drafted; publint/ATTW comparison recorded separately, not PackProof runner results |
 
 No claims of real customer adoption, measured productivity gains, novelty over all existing tools, or contest submission are made at this stage. No paid plan or purchase has been activated.
