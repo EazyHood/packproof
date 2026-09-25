@@ -19,7 +19,7 @@ Verification regressions cover archive bytes, extra installed files, unsupported
 
 These observations apply to the synthetic fixtures and this host. No speed improvement, customer adoption, production sandbox, universal API coverage or Linux validation is claimed. An expected FAIL is a correctly behaving control, not a package ready for release. Reports are saved evidence, not independently signed attestations.
 
-Original Bob task snapshots are retained in git: task 01 `3ab678e`, task 02 `51b4837`, task 03 `d246d37`. See PROVENANCE.md for contributor boundaries and bob_sessions/README.md for the still-missing genuine consumption-summary screenshots.
+Original Bob phase snapshots are retained in git: phase 01 `3ab678e`, phase 02 `51b4837`, phase 03 `d246d37`. See PROVENANCE.md for contributor boundaries and bob_sessions/README.md for the genuine consumption-summary screenshot of the single observed development task covering these phases.
 
 ## Static viewer
 

@@ -1,0 +1,18 @@
+{
+  "capturedAt": "2026-09-25T21:05:32.783Z",
+  "taskId": "ae46bb0c03f96cc7a555a0df32cc4c4b",
+  "workspace": "packproof",
+  "bobcoinsObserved": 30.16,
+  "contextDisplayed": "66.0k / 270.0k (24%)",
+  "file": "EazyHood-task-01-packproof-consumption.jpg",
+  "mimeType": "image/jpeg",
+  "sha256": "443d3f9ea6edb39e934d4a16a32cdfe8fdd2a1cfd472c2780cb047c4ff69d5d5",
+  "captureMethod": "Original IBM Bob window screenshot via supported Computer Use; no image modifications",
+  "inventory": {
+    "checkedAt": "2026-09-25T21:07:45.015Z",
+    "visibleTasks": 2,
+    "developmentTasks": 1,
+    "excludedAuthenticationTasks": 1,
+    "scope": "Tasks / View all in current Bob IDE; search empty; one development task for packproof observed; no additional workspace selector visible"
+  }
+}
