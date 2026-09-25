@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <meta name="description" content="Inspect saved PackProof evidence: source tests, packed archives, consumer contracts, and verification checks.">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; connect-src 'self'; img-src 'self' data:; font-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <title>PackProof — inspect what ships</title>
+  <link rel="stylesheet" href="./style.css">
+  <script src="./app.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#evidence-browser">Skip to evidence</a>
+  <header class="site-header page-width">
+    <a class="wordmark" href="./" aria-label="PackProof home">
+      <svg viewBox="0 0 32 36" width="30" height="34" aria-hidden="true"><path d="m16 2 14 8v16l-14 8L2 26V10Z M2 10l14 8 14-8 M16 18v16 M9 6l14 8v8" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
+      PackProof<span class="wordmark-period">.</span>
+    </a>
+    <span class="header-caption">Inspect what ships.</span>
+    <div class="header-actions">
+      <button class="button button-quiet" type="button" id="reset-data" hidden>Saved evidence</button>
+      <button class="button button-dark" type="button" id="import-trigger">Import JSON <span aria-hidden="true">↗</span></button>
+      <label class="visually-hidden" for="report-file">Import a local PackProof JSON report</label>
+      <input class="visually-hidden" id="report-file" type="file" accept=".json,application/json" aria-describedby="import-help import-error" tabindex="-1">
+    </div>
+  </header>
+
+  <main class="page-width">
+    <div id="import-error" class="message message-error" role="alert" hidden></div>
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero-copy">
+        <p class="eyebrow"><span class="small-square" aria-hidden="true"></span> The release evidence desk</p>
+        <h1 id="hero-title">Read the artifact.<br>Trace the evidence.</h1>
+        <p class="hero-description" id="hero-description">A source test sees your working tree. A consumer gets your archive. Follow the saved evidence from one to the other.</p>
+        <p class="record-caption"><span class="record-indicator" aria-hidden="true"></span><span id="collection-caption">Loading saved evidence…</span></p>
+      </div>
+      <div class="artifact-drawing" aria-hidden="true">
+        <div class="drawing-grid"></div>
+        <div class="drawing-file drawing-file-back"><span>SOURCE</span><i></i><i></i><i></i><i></i></div>
+        <div class="drawing-file drawing-file-front"><span>ARCHIVE</span><i></i><i></i><i class="missing-line"></i><i></i><div class="drawing-seal">.tgz</div></div>
+        <span class="drawing-annotation">Follow the bytes.</span>
+        <svg class="drawing-arrow" viewBox="0 0 110 60"><path d="M4 48C28 53 60 50 92 12M74 15l21-8-1 23" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+      </div>
+    </section>
+
+    <section id="comparison" class="comparison" aria-labelledby="comparison-title" hidden>
+      <div class="section-heading"><div><p class="eyebrow">The packaging gap</p><h2 id="comparison-title">One operation. Two archives.</h2></div><p>Recorded control cases<br><span class="muted">Same operation contract</span></p></div>
+      <div id="comparison-cases" class="comparison-grid"></div>
+      <p class="comparison-note" id="comparison-note"></p>
+    </section>
+
+    <section id="evidence-browser" class="evidence-browser" aria-labelledby="browser-title" tabindex="-1">
+      <div class="section-heading browser-heading"><div><p class="eyebrow">Open the record</p><h2 id="browser-title">Trace the result.</h2></div><span id="report-count" class="mono muted"></span></div>
+      <div id="loading-state" class="loading-state" role="status"><span>Reading saved reports…</span><div class="skeleton"></div><div class="skeleton short"></div></div>
+      <div id="load-error" class="message" role="alert" hidden><h3>Saved evidence is unavailable.</h3><p id="load-error-text"></p><button type="button" class="button button-quiet" id="retry-data">Retry saved evidence</button></div>
+      <div id="browser-layout" class="browser-layout" hidden>
+        <aside class="case-sidebar" aria-label="Report selection">
+          <div class="case-filters">
+            <label for="case-search">Find a case</label>
+            <input id="case-search" type="search" placeholder="Case name or package" autocomplete="off" spellcheck="false">
+            <label class="visually-hidden" for="outcome-filter">Filter observed outcome</label>
+            <select id="outcome-filter"><option value="all">All observed outcomes</option><option value="FAIL">FAIL</option><option value="PASS">PASS</option><option value="INCONCLUSIVE">INCONCLUSIVE</option></select>
+          </div>
+          <p class="case-list-label"><span>Case / observed outcome</span><span id="visible-count"></span></p>
+          <nav id="case-list" aria-label="Evidence cases"></nav>
+          <p id="empty-filter" class="empty-filter" hidden>No matching cases. Try another name or outcome.</p>
+          <button type="button" id="clear-filters" class="button button-quiet" hidden>Clear filters</button>
+          <p class="sidebar-note">An expected failure is still an observed <strong>FAIL</strong>. Control expectations are shown separately.</p>
+        </aside>
+        <article class="report-detail" id="report-detail" aria-labelledby="report-title" tabindex="-1"></article>
+      </div>
+      <div id="empty-state" class="empty-state" hidden><span class="empty-mark" aria-hidden="true">[ ]</span><h3>No reports in this collection.</h3><p>Import a PackProof report or a collection with a non-empty reports array to inspect its evidence.</p><button type="button" class="button button-dark" id="empty-import">Import JSON</button></div>
+    </section>
+
+    <aside class="evidence-notes" aria-label="Evidence scope">
+      <div><p class="eyebrow">Read this record correctly</p><p id="evidence-note">This viewer presents saved JSON reports. It does not execute packages, rerun checks, or authenticate their origin.</p></div>
+      <div><p id="import-help">Imports stay in this browser tab. Nothing is uploaded. Recorded hashes identify evidence bytes; displaying a hash does not verify them.</p><p id="source-commit" class="mono"></p></div>
+    </aside>
+  </main>
+
+  <footer class="site-footer page-width"><span class="footer-brand">PackProof<span>.</span></span><p>Core: IBM Bob IDE; final evidence fixes and viewer: Codex</p><a href="./README.md">Viewer notes <span aria-hidden="true">↗</span></a></footer>
+  <p id="live-status" class="visually-hidden" aria-live="polite" role="status"></p>
+  <noscript><div class="noscript">This local evidence viewer needs JavaScript to read JSON reports. Enable JavaScript or open the report JSON directly.</div></noscript>
+</body>
+</html>

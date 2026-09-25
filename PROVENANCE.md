@@ -10,7 +10,7 @@ Started during the IBM Bob 2.0 build window, 25 September 2026 (Colombia time).
 | Independent verification and review | Codex | Original task 03: 48/49 tests passed; both false-PASS controls corrected and six demo outcomes matched. Final review corrections: 64/64 tests passed, 0 skipped, six demo outcomes matched and source baseline passed on Windows. |
 | Final evidence corrections | Codex, separately attributed after preserving Bob task 03 | Real bounded archive-byte comparison, exact installed identity, pre/post evidence gating, corrected regression fixture, command records, strict missing-baseline handling and documentation; original Bob code retained in d246d37 |
 | Bob consumption-summary screenshots | Actual Bob IDE task output required | Tasks 01–03 produced code; genuine final consumption-summary screenshots not yet collected |
-| Report viewer and demo recording | Codex | Static saved-report viewer being prepared; no MP4 or public submission yet |
+| Report viewer and export script | Codex | Static saved-report viewer completed; six authentic redacted reports, import/filter/details controls and responsive layout verified in isolated headless Chromium; no MP4 or public submission yet |
 | Demo storyboard and independent comparator evaluation | Codex | Storyboard drafted; publint/ATTW comparison recorded separately, not PackProof runner results |
 
 ## Implementation notes (Bob task BOB_TASK_01)
@@ -78,3 +78,7 @@ Codex corrected the test setup, completed bounded in-memory tarball-to-installed
 Final observed validation on Windows, Node 24.16.0/npm 11.13.0: **64 tests passed, 0 failed, 0 skipped**; **six demo observations matched**, with three genuine contract failures retained as FAIL; the frozen source baseline passed. Additional actual executions cover changed contract bytes, an unreadable contract copy and changed installed package bytes. Linux has not been tested. Raw records are retained outside the public project under the coordinating task's `outputs/ibm-bob-2/validation-final-2026-09-25` directory.
 
 Frozen fixture packages and reference contracts remain unchanged. No customer adoption, measured time savings, prize, public submission or genuine consumption-summary screenshot is implied by these results. Bob's final consumption for each task remains unrecorded until real screenshots are supplied.
+
+## Static viewer — Codex
+
+The presentation viewer and export script are separate Codex work. The bundled six reports came from the final verified core commit `8bb3538`; original records are retained separately and personal host paths are redacted in the shared copy. Independent headless Chromium checks passed for loading the saved reports, PASS/FAIL filtering, search recovery, case selection, malformed import recovery, hostile HTML treated as text, keyboard focus and widths of 375/768/1440 pixels. No JavaScript exception or external network request was observed. Desktop and mobile screenshots were visually reviewed. These checks do not execute packages in the browser or authenticate a report's author.

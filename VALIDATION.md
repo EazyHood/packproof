@@ -20,3 +20,7 @@ Verification regressions cover archive bytes, extra installed files, unsupported
 These observations apply to the synthetic fixtures and this host. No speed improvement, customer adoption, production sandbox, universal API coverage or Linux validation is claimed. An expected FAIL is a correctly behaving control, not a package ready for release. Reports are saved evidence, not independently signed attestations.
 
 Original Bob task snapshots are retained in git: task 01 `3ab678e`, task 02 `51b4837`, task 03 `d246d37`. See PROVENANCE.md for contributor boundaries and bob_sessions/README.md for the still-missing genuine consumption-summary screenshots.
+
+## Static viewer
+
+The bundled dataset contains the six real reports from core commit `8bb3538`, with host paths redacted. Isolated headless Chromium checks passed: saved-data load; outcome filtering; empty-search recovery; case selection; malformed JSON recovery without losing prior data; hostile HTML displayed as text; keyboard focus; and no page overflow at 375, 768 and 1440 pixels. No JavaScript exceptions or external network requests were observed. Desktop and mobile captures were visually reviewed. This is saved-evidence presentation, not execution of the CLI inside the browser.

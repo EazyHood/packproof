@@ -1,0 +1,1256 @@
+{
+  "generatedAt": "2026-09-25T20:51:01.749Z",
+  "sourceCommit": "8bb35383550c2d777de3c0c3b86bf35f40642fd9",
+  "sourceBaseline": {
+    "status": "pass",
+    "command": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "--test",
+      "--test-reporter=tap",
+      "<PROJECT>\\validation-fixtures\\source-tests.test.mjs"
+    ],
+    "scriptPath": "<PROJECT>\\validation-fixtures\\source-tests.test.mjs",
+    "scriptHash": "56C9359E304D915441935CD58C2D55660959E59F775461665CCEF774763D4754",
+    "exit": 0,
+    "stdout": "TAP version 13\n# Subtest: labels-missing-template: source operation produces the frozen label\nok 1 - labels-missing-template: source operation produces the frozen label\n  ---\n  duration_ms: 1.9439\n  type: 'test'\n  ...\n# Subtest: labels-fixed: source operation produces the frozen label\nok 2 - labels-fixed: source operation produces the frozen label\n  ---\n  duration_ms: 0.7631\n  type: 'test'\n  ...\n# Subtest: labels-broken-export: source operation produces the frozen label\nok 3 - labels-broken-export: source operation produces the frozen label\n  ---\n  duration_ms: 0.7079\n  type: 'test'\n  ...\n# Subtest: missing and fixed variants differ only in the files allowlist\nok 4 - missing and fixed variants differ only in the files allowlist\n  ---\n  duration_ms: 1.0777\n  type: 'test'\n  ...\n# Subtest: second library uses its independent CommonJS and JSON structure\nok 5 - second library uses its independent CommonJS and JSON structure\n  ---\n  duration_ms: 0.18\n  type: 'test'\n  ...\n1..5\n# tests 5\n# suites 0\n# pass 5\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 63.6309\n",
+    "stderr": "",
+    "durationMs": 104,
+    "timedOut": false,
+    "signal": null,
+    "error": null,
+    "recordedAt": "2026-09-25T20:44:34.089Z"
+  },
+  "reports": [
+    {
+      "$schema": "packproof-report-v1",
+      "runId": "102229b3-3b1a-4e87-8739-fd25fb28769e",
+      "recordedAt": "2026-09-25T20:44:32.694Z",
+      "caseName": "missing-template-operation",
+      "provenance": "Core implementation and tasks 01–03 by IBM Bob IDE; fixtures, independent review and final evidence corrections by Codex",
+      "commands": {
+        "pack": [
+          "C:\\Program Files\\nodejs\\node.exe",
+          "C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js",
+          "pack",
+          "--ignore-scripts",
+          "--json",
+          "--pack-destination",
+          "<USER>\\Documents\\Codex\\2026-09-09\\tengo\\outputs\\ibm-bob-2\\validation-final-2026-09-25\\demo\\102229b3-3b1a-4e87-8739-fd25fb28769e\\archive"
+        ],
+        "install": [
+          "C:\\Program Files\\nodejs\\node.exe",
+          "C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js",
+          "install",
+          "--ignore-scripts",
+          "--offline",
+          "--no-audit",
+          "--no-fund",
+          "--package-lock=false",
+          "--save=false",
+          "<USER>\\Documents\\Codex\\2026-09-09\\tengo\\outputs\\ibm-bob-2\\validation-final-2026-09-25\\demo\\102229b3-3b1a-4e87-8739-fd25fb28769e\\archive\\packproof-labels-1.0.0.tgz"
+        ],
+        "contract": [
+          "C:\\Program Files\\nodejs\\node.exe",
+          "./contract.mjs"
+        ]
+      },
+      "environment": {
+        "node": "v24.16.0",
+        "npm": "11.13.0",
+        "platform": "win32",
+        "arch": "x64",
+        "npmCliJs": "C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js"
+      },
+      "archive": {
+        "fixtureDir": "<PROJECT>\\validation-fixtures\\labels-missing-template",
+        "tarballPath": "<USER>\\Documents\\Codex\\2026-09-09\\tengo\\outputs\\ibm-bob-2\\validation-final-2026-09-25\\demo\\102229b3-3b1a-4e87-8739-fd25fb28769e\\archive\\packproof-labels-1.0.0.tgz",
+        "archiveSHA256": "84A58EB0D406617F1BEB64EAED31CFEBB4B821BDE56B14B59E60617862790FEC",
+        "packageName": "@packproof/labels",
+        "packedFiles": [
+          "LICENSE",
+          "package.json",
+          "src/index.mjs"
+        ],
+        "packExit": 0,
+        "packSignal": "",
+        "packTimedOut": false,
+        "packError": "",
+        "packStdout": "[\n  {\n    \"id\": \"@packproof/labels@1.0.0\",\n    \"name\": \"@packproof/labels\",\n    \"version\": \"1.0.0\",\n    \"size\": 1347,\n    \"unpackedSize\": 2175,\n    \"shasum\": \"debce79a3b1251e11aad57a8c502e415739d4c9e\",\n    \"integrity\": \"sha512-vW5txInJaP1S4iji3nGpZAVdGfQWOgUwGZPH8mErGfiuaj7HSzv1zK5RCHu+F8o1HJ3B8RuFV6Q3Its8QTgYTw==\",\n    \"filename\": \"packproof-labels-1.0.0.tgz\",\n    \"files\": [\n      {\n        \"path\": \"LICENSE\",\n        \"size\": 1079,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"package.json\",\n        \"size\": 274,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/index.mjs\",\n        \"size\": 822,\n        \"mode\": 420\n      }\n    ],\n    \"entryCount\": 3,\n    \"bundled\": []\n  }\n]\n",
+        "packStderr": "",
+        "elapsedMs": 656
+      },
+      "consumer": {
+        "consumerDir": "<USER>\\AppData\\Local\\Temp\\packproof-consumer-zrKuKA",
+        "isolationPreconditionMet": true,
+        "installedPkgDir": "<USER>\\AppData\\Local\\Temp\\packproof-consumer-zrKuKA\\node_modules\\@packproof\\labels",
+        "installedPkgName": "@packproof/labels",
+        "installedIsSymlink": false,
+        "installExit": 0,
+        "installSignal": "",
+        "installTimedOut": false,
+        "installError": "",
+        "installStdout": "\nadded 1 package in 310ms\n",
+        "installStderr": "",
+        "elapsedMs": 403
+      },
+      "verify": {
+        "isolation": {
+          "status": "pass",
+          "reason": "Consumer is outside fixture; no ancestor node_modules",
+          "consumerRealpath": "<USER>\\AppData\\Local\\Temp\\packproof-consumer-zrKuKA",
+          "fixtureRealpath": "<PROJECT>\\validation-fixtures\\labels-missing-template"
+        },
+        "identity": {
+          "status": "pass",
+          "reason": "Exact expected package manifest and realpath verified",
+          "packageDir": "<USER>\\AppData\\Local\\Temp\\packproof-consumer-zrKuKA\\node_modules\\@packproof\\labels",
+          "packageRealpath": "<USER>\\AppData\\Local\\Temp\\packproof-consumer-zrKuKA\\node_modules\\@packproof\\labels",
+          "packageName": "@packproof/labels",
+          "packageVersion": "1.0.0"
+        },
+        "contractHash": {
+          "status": "pass",
+          "reason": "Contract bytes unchanged",
+          "beforeSHA256": "1E78897D169224B61360CE8AF8C43ED3D35C314094AD8F1683500B17DB086C3B",
+          "afterSHA256": "1E78897D169224B61360CE8AF8C43ED3D35C314094AD8F1683500B17DB086C3B"
+        },
+        "installedBytes": {
+          "status": "pass",
+          "reason": "Every archived regular file matches installed bytes; no extra installed files",
+          "archiveSHA256": "84A58EB0D406617F1BEB64EAED31CFEBB4B821BDE56B14B59E60617862790FEC",
+          "fileCount": 3,
+          "files": [
+            {
+              "path": "LICENSE",
+              "size": 1079,
+              "sha256": "C8F798A292C399111352274C7AB1B3B73712D3425C80EC8F2F3C512D14D03468"
+            },
+            {
+              "path": "package.json",
+              "size": 274,
+              "sha256": "EFD8796F681E0D55021C3227AB97DA6CD99567E9DE953901761FCEA8F1B14B72"
+            },
+            {
+              "path": "src/index.mjs",
+              "size": 822,
+              "sha256": "B3448D3BC65B001DECDC84868E8FBC14AD62F1CAAFA0153F835B758B31F7D40F"
+            }
+          ]
+        },
+        "allRequired": true,
+        "failureReason": "",
+        "before": {
+          "isolation": {
+            "status": "pass",
+            "reason": "Consumer is outside fixture; no ancestor node_modules",
+            "consumerRealpath": "<USER>\\AppData\\Local\\Temp\\packproof-consumer-zrKuKA",
+            "fixtureRealpath": "<PROJECT>\\validation-fixtures\\labels-missing-template"
+          },
+          "identity": {
+            "status": "pass",
+            "reason": "Exact expected package manifest and realpath verified",
+            "packageDir": "<USER>\\AppData\\Local\\Temp\\packproof-consumer-zrKuKA\\node_modules\\@packproof\\labels",
+            "packageRealpath": "<USER>\\AppData\\Local\\Temp\\packproof-consumer-zrKuKA\\node_modules\\@packproof\\labels",
+            "packageName": "@packproof/labels",
+            "packageVersion": "1.0.0"
+          },
+          "contractHash": {
+            "status": "pass",
+            "reason": "Contract bytes unchanged",
+            "beforeSHA256": "1E78897D169224B61360CE8AF8C43ED3D35C314094AD8F1683500B17DB086C3B",
+            "afterSHA256": "1E78897D169224B61360CE8AF8C43ED3D35C314094AD8F1683500B17DB086C3B"
+          },
+          "installedBytes": {
+            "status": "pass",
+            "reason": "Every archived regular file matches installed bytes; no extra installed files",
+            "archiveSHA256": "84A58EB0D406617F1BEB64EAED31CFEBB4B821BDE56B14B59E60617862790FEC",
+            "fileCount": 3,
+            "files": [
+              {
+                "path": "LICENSE",
+                "size": 1079,
+                "sha256": "C8F798A292C399111352274C7AB1B3B73712D3425C80EC8F2F3C512D14D03468"
+              },
+              {
+                "path": "package.json",
+                "size": 274,
+                "sha256": "EFD8796F681E0D55021C3227AB97DA6CD99567E9DE953901761FCEA8F1B14B72"
+              },
+              {
+                "path": "src/index.mjs",
+                "size": 822,
+                "sha256": "B3448D3BC65B001DECDC84868E8FBC14AD62F1CAAFA0153F835B758B31F7D40F"
+              }
+            ]
+          },
+          "allRequired": true,
+          "failureReason": ""
+        },
+        "contractHashAfter": {
+          "status": "pass",
+          "reason": "Contract bytes unchanged",
+          "beforeSHA256": "1E78897D169224B61360CE8AF8C43ED3D35C314094AD8F1683500B17DB086C3B",
+          "afterSHA256": "1E78897D169224B61360CE8AF8C43ED3D35C314094AD8F1683500B17DB086C3B"
+        }
+      },
+      "contract": {
+        "contractFile": "<PROJECT>\\validation-fixtures\\contracts\\label-operation.mjs",
+        "contractCopiedPath": "<USER>\\AppData\\Local\\Temp\\packproof-consumer-zrKuKA\\contract.mjs",
+        "contractCopiedSHA256": "1E78897D169224B61360CE8AF8C43ED3D35C314094AD8F1683500B17DB086C3B",
+        "exitCode": 1,
+        "signal": "",
+        "stdout": "",
+        "stderr": "node:fs:441\r\n    return binding.readFileUtf8(path, stringToFlags(options.flag));\r\n                   ^\r\n\r\nError: ENOENT: no such file or directory, open '<USER>\\AppData\\Local\\Temp\\packproof-consumer-zrKuKA\\node_modules\\@packproof\\labels\\src\\templates\\label.txt'\r\n    at readFileSync (node:fs:441:20)\r\n    at formatLabel (file:///<USER>/AppData/Local/Temp/packproof-consumer-zrKuKA/node_modules/@packproof/labels/src/index.mjs:14:20)\r\n    at file:///<USER>/AppData/Local/Temp/packproof-consumer-zrKuKA/contract.mjs:4:16\r\n    at ModuleJob.run (node:internal/modules/esm/module_job:439:25)\r\n    at async node:internal/modules/esm/loader:633:26\r\n    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5) {\r\n  errno: -4058,\r\n  code: 'ENOENT',\r\n  syscall: 'open',\r\n  path: '<USER>\\\\AppData\\\\Local\\\\Temp\\\\packproof-consumer-zrKuKA\\\\node_modules\\\\@packproof\\\\labels\\\\src\\\\templates\\\\label.txt'\r\n}\r\n\r\nNode.js v24.16.0\r\n",
+        "timedOut": false,
+        "elapsedMs": 51,
+        "timeoutMs": 15000,
+        "error": ""
+      },
+      "result": {
+        "outcome": "FAIL",
+        "reason": "Contract exited 1"
+      },
+      "sourceBaseline": {
+        "status": "pass",
+        "command": [
+          "C:\\Program Files\\nodejs\\node.exe",
+          "--test",
+          "--test-reporter=tap",
+          "<PROJECT>\\validation-fixtures\\source-tests.test.mjs"
+        ],
+        "scriptPath": "<PROJECT>\\validation-fixtures\\source-tests.test.mjs",
+        "scriptHash": "56C9359E304D915441935CD58C2D55660959E59F775461665CCEF774763D4754",
+        "exit": 0,
+        "stdout": "TAP version 13\n# Subtest: labels-missing-template: source operation produces the frozen label\nok 1 - labels-missing-template: source operation produces the frozen label\n  ---\n  duration_ms: 1.9439\n  type: 'test'\n  ...\n# Subtest: labels-fixed: source operation produces the frozen label\nok 2 - labels-fixed: source operation produces the frozen label\n  ---\n  duration_ms: 0.7631\n  type: 'test'\n  ...\n# Subtest: labels-broken-export: source operation produces the frozen label\nok 3 - labels-broken-export: source operation produces the frozen label\n  ---\n  duration_ms: 0.7079\n  type: 'test'\n  ...\n# Subtest: missing and fixed variants differ only in the files allowlist\nok 4 - missing and fixed variants differ only in the files allowlist\n  ---\n  duration_ms: 1.0777\n  type: 'test'\n  ...\n# Subtest: second library uses its independent CommonJS and JSON structure\nok 5 - second library uses its independent CommonJS and JSON structure\n  ---\n  duration_ms: 0.18\n  type: 'test'\n  ...\n1..5\n# tests 5\n# suites 0\n# pass 5\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 63.6309\n",
+        "stderr": "",
+        "durationMs": 104,
+        "timedOut": false,
+        "signal": null,
+        "error": null,
+        "recordedAt": "2026-09-25T20:44:34.089Z"
+      },
+      "expectedOutcome": "FAIL"
+    },
+    {
+      "$schema": "packproof-report-v1",
+      "runId": "9d19c655-be77-4daa-a3b8-7706de079169",
+      "recordedAt": "2026-09-25T20:44:34.091Z",
+      "caseName": "missing-template-import-only",
+      "provenance": "Core implementation and tasks 01–03 by IBM Bob IDE; fixtures, independent review and final evidence corrections by Codex",
+      "commands": {
+        "pack": [
+          "C:\\Program Files\\nodejs\\node.exe",
+          "C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js",
+          "pack",
+          "--ignore-scripts",
+          "--json",
+          "--pack-destination",
+          "<USER>\\Documents\\Codex\\2026-09-09\\tengo\\outputs\\ibm-bob-2\\validation-final-2026-09-25\\demo\\9d19c655-be77-4daa-a3b8-7706de079169\\archive"
+        ],
+        "install": [
+          "C:\\Program Files\\nodejs\\node.exe",
+          "C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js",
+          "install",
+          "--ignore-scripts",
+          "--offline",
+          "--no-audit",
+          "--no-fund",
+          "--package-lock=false",
+          "--save=false",
+          "<USER>\\Documents\\Codex\\2026-09-09\\tengo\\outputs\\ibm-bob-2\\validation-final-2026-09-25\\demo\\9d19c655-be77-4daa-a3b8-7706de079169\\archive\\packproof-labels-1.0.0.tgz"
+        ],
+        "contract": [
+          "C:\\Program Files\\nodejs\\node.exe",
+          "./contract.mjs"
+        ]
+      },
+      "environment": {
+        "node": "v24.16.0",
+        "npm": "11.13.0",
+        "platform": "win32",
+        "arch": "x64",
+        "npmCliJs": "C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js"
+      },
+      "archive": {
+        "fixtureDir": "<PROJECT>\\validation-fixtures\\labels-missing-template",
+        "tarballPath": "<USER>\\Documents\\Codex\\2026-09-09\\tengo\\outputs\\ibm-bob-2\\validation-final-2026-09-25\\demo\\9d19c655-be77-4daa-a3b8-7706de079169\\archive\\packproof-labels-1.0.0.tgz",
+        "archiveSHA256": "84A58EB0D406617F1BEB64EAED31CFEBB4B821BDE56B14B59E60617862790FEC",
+        "packageName": "@packproof/labels",
+        "packedFiles": [
+          "LICENSE",
+          "package.json",
+          "src/index.mjs"
+        ],
+        "packExit": 0,
+        "packSignal": "",
+        "packTimedOut": false,
+        "packError": "",
+        "packStdout": "[\n  {\n    \"id\": \"@packproof/labels@1.0.0\",\n    \"name\": \"@packproof/labels\",\n    \"version\": \"1.0.0\",\n    \"size\": 1347,\n    \"unpackedSize\": 2175,\n    \"shasum\": \"debce79a3b1251e11aad57a8c502e415739d4c9e\",\n    \"integrity\": \"sha512-vW5txInJaP1S4iji3nGpZAVdGfQWOgUwGZPH8mErGfiuaj7HSzv1zK5RCHu+F8o1HJ3B8RuFV6Q3Its8QTgYTw==\",\n    \"filename\": \"packproof-labels-1.0.0.tgz\",\n    \"files\": [\n      {\n        \"path\": \"LICENSE\",\n        \"size\": 1079,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"package.json\",\n        \"size\": 274,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/index.mjs\",\n        \"size\": 822,\n        \"mode\": 420\n      }\n    ],\n    \"entryCount\": 3,\n    \"bundled\": []\n  }\n]\n",
+        "packStderr": "",
+        "elapsedMs": 357
+      },
+      "consumer": {
+        "consumerDir": "<USER>\\AppData\\Local\\Temp\\packproof-consumer-NtKxmo",
+        "isolationPreconditionMet": true,
+        "installedPkgDir": "<USER>\\AppData\\Local\\Temp\\packproof-consumer-NtKxmo\\node_modules\\@packproof\\labels",
+        "installedPkgName": "@packproof/labels",
+        "installedIsSymlink": false,
+        "installExit": 0,
+        "installSignal": "",
+        "installTimedOut": false,
+        "installError": "",
+        "installStdout": "\nadded 1 package in 295ms\n",
+        "installStderr": "",
+        "elapsedMs": 384
+      },
+      "verify": {
+        "isolation": {
+          "status": "pass",
+          "reason": "Consumer is outside fixture; no ancestor node_modules",
+          "consumerRealpath": "<USER>\\AppData\\Local\\Temp\\packproof-consumer-NtKxmo",
+          "fixtureRealpath": "<PROJECT>\\validation-fixtures\\labels-missing-template"
+        },
+        "identity": {
+          "status": "pass",
+          "reason": "Exact expected package manifest and realpath verified",
+          "packageDir": "<USER>\\AppData\\Local\\Temp\\packproof-consumer-NtKxmo\\node_modules\\@packproof\\labels",
+          "packageRealpath": "<USER>\\AppData\\Local\\Temp\\packproof-consumer-NtKxmo\\node_modules\\@packproof\\labels",
+          "packageName": "@packproof/labels",
+          "packageVersion": "1.0.0"
+        },
+        "contractHash": {
+          "status": "pass",
+          "reason": "Contract bytes unchanged",
+          "beforeSHA256": "9045C8FE895C222F3ADE193DDFCEB811DC4884941B7AF8FA33B85256EE4E7381",
+          "afterSHA256": "9045C8FE895C222F3ADE193DDFCEB811DC4884941B7AF8FA33B85256EE4E7381"
+        },
+        "installedBytes": {
+          "status": "pass",
+          "reason": "Every archived regular file matches installed bytes; no extra installed files",
+          "archiveSHA256": "84A58EB0D406617F1BEB64EAED31CFEBB4B821BDE56B14B59E60617862790FEC",
+          "fileCount": 3,
+          "files": [
+            {
+              "path": "LICENSE",
+              "size": 1079,
+              "sha256": "C8F798A292C399111352274C7AB1B3B73712D3425C80EC8F2F3C512D14D03468"
+            },
+            {
+              "path": "package.json",
+              "size": 274,
+              "sha256": "EFD8796F681E0D55021C3227AB97DA6CD99567E9DE953901761FCEA8F1B14B72"
+            },
+            {
+              "path": "src/index.mjs",
+              "size": 822,
+              "sha256": "B3448D3BC65B001DECDC84868E8FBC14AD62F1CAAFA0153F835B758B31F7D40F"
+            }
+          ]
+        },
+        "allRequired": true,
+        "failureReason": "",
+        "before": {
+          "isolation": {
+            "status": "pass",
+            "reason": "Consumer is outside fixture; no ancestor node_modules",
+            "consumerRealpath": "<USER>\\AppData\\Local\\Temp\\packproof-consumer-NtKxmo",
+            "fixtureRealpath": "<PROJECT>\\validation-fixtures\\labels-missing-template"
+          },
+          "identity": {
+            "status": "pass",
+            "reason": "Exact expected package manifest and realpath verified",
+            "packageDir": "<USER>\\AppData\\Local\\Temp\\packproof-consumer-NtKxmo\\node_modules\\@packproof\\labels",
+            "packageRealpath": "<USER>\\AppData\\Local\\Temp\\packproof-consumer-NtKxmo\\node_modules\\@packproof\\labels",
+            "packageName": "@packproof/labels",
+            "packageVersion": "1.0.0"
+          },
+          "contractHash": {
+            "status": "pass",
+            "reason": "Contract bytes unchanged",
+            "beforeSHA256": "9045C8FE895C222F3ADE193DDFCEB811DC4884941B7AF8FA33B85256EE4E7381",
+            "afterSHA256": "9045C8FE895C222F3ADE193DDFCEB811DC4884941B7AF8FA33B85256EE4E7381"
+          },
+          "installedBytes": {
+            "status": "pass",
+            "reason": "Every archived regular file matches installed bytes; no extra installed files",
+            "archiveSHA256": "84A58EB0D406617F1BEB64EAED31CFEBB4B821BDE56B14B59E60617862790FEC",
+            "fileCount": 3,
+            "files": [
+              {
+                "path": "LICENSE",
+                "size": 1079,
+                "sha256": "C8F798A292C399111352274C7AB1B3B73712D3425C80EC8F2F3C512D14D03468"
+              },
+              {
+                "path": "package.json",
+                "size": 274,
+                "sha256": "EFD8796F681E0D55021C3227AB97DA6CD99567E9DE953901761FCEA8F1B14B72"
+              },
+              {
+                "path": "src/index.mjs",
+                "size": 822,
+                "sha256": "B3448D3BC65B001DECDC84868E8FBC14AD62F1CAAFA0153F835B758B31F7D40F"
+              }
+            ]
+          },
+          "allRequired": true,
+          "failureReason": ""
+        },
+        "contractHashAfter": {
+          "status": "pass",
+          "reason": "Contract bytes unchanged",
+          "beforeSHA256": "9045C8FE895C222F3ADE193DDFCEB811DC4884941B7AF8FA33B85256EE4E7381",
+          "afterSHA256": "9045C8FE895C222F3ADE193DDFCEB811DC4884941B7AF8FA33B85256EE4E7381"
+        }
+      },
+      "contract": {
+        "contractFile": "<PROJECT>\\validation-fixtures\\contracts\\label-import-only.mjs",
+        "contractCopiedPath": "<USER>\\AppData\\Local\\Temp\\packproof-consumer-NtKxmo\\contract.mjs",
+        "contractCopiedSHA256": "9045C8FE895C222F3ADE193DDFCEB811DC4884941B7AF8FA33B85256EE4E7381",
+        "exitCode": 0,
+        "signal": "",
+        "stdout": "{\"contract\":\"label-import-only-v1\",\"operationExercised\":false}\n",
+        "stderr": "",
+        "timedOut": false,
+        "elapsedMs": 47,
+        "timeoutMs": 15000,
+        "error": ""
+      },
+      "result": {
+        "outcome": "PASS",
+        "reason": "Contract exited 0"
+      },
+      "sourceBaseline": {
+        "status": "not-run",
+        "reason": "Source baseline not requested in single-case mode"
+      },
+      "expectedOutcome": "PASS"
+    },
+    {
+      "$schema": "packproof-report-v1",
+      "runId": "41fffdf9-1db9-465b-8eb7-f47639b9cc47",
+      "recordedAt": "2026-09-25T20:44:35.001Z",
+      "caseName": "fixed-operation",
+      "provenance": "Core implementation and tasks 01–03 by IBM Bob IDE; fixtures, independent review and final evidence corrections by Codex",
+      "commands": {
+        "pack": [
+          "C:\\Program Files\\nodejs\\node.exe",
+          "C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js",
+          "pack",
+          "--ignore-scripts",
+          "--json",
+          "--pack-destination",
+          "<USER>\\Documents\\Codex\\2026-09-09\\tengo\\outputs\\ibm-bob-2\\validation-final-2026-09-25\\demo\\41fffdf9-1db9-465b-8eb7-f47639b9cc47\\archive"
+        ],
+        "install": [
+          "C:\\Program Files\\nodejs\\node.exe",
+          "C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js",
+          "install",
+          "--ignore-scripts",
+          "--offline",
+          "--no-audit",
+          "--no-fund",
+          "--package-lock=false",
+          "--save=false",
+          "<USER>\\Documents\\Codex\\2026-09-09\\tengo\\outputs\\ibm-bob-2\\validation-final-2026-09-25\\demo\\41fffdf9-1db9-465b-8eb7-f47639b9cc47\\archive\\packproof-labels-1.0.0.tgz"
+        ],
+        "contract": [
+          "C:\\Program Files\\nodejs\\node.exe",
+          "./contract.mjs"
+        ]
+      },
+      "environment": {
+        "node": "v24.16.0",
+        "npm": "11.13.0",
+        "platform": "win32",
+        "arch": "x64",
+        "npmCliJs": "C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js"
+      },
+      "archive": {
+        "fixtureDir": "<PROJECT>\\validation-fixtures\\labels-fixed",
+        "tarballPath": "<USER>\\Documents\\Codex\\2026-09-09\\tengo\\outputs\\ibm-bob-2\\validation-final-2026-09-25\\demo\\41fffdf9-1db9-465b-8eb7-f47639b9cc47\\archive\\packproof-labels-1.0.0.tgz",
+        "archiveSHA256": "F42B3AE2F5A7DF413CDE2163750F7E9852FCEF0B90A55070E14535CD0E2573E9",
+        "packageName": "@packproof/labels",
+        "packedFiles": [
+          "LICENSE",
+          "package.json",
+          "src/index.mjs",
+          "src/templates/label.txt"
+        ],
+        "packExit": 0,
+        "packSignal": "",
+        "packTimedOut": false,
+        "packError": "",
+        "packStdout": "[\n  {\n    \"id\": \"@packproof/labels@1.0.0\",\n    \"name\": \"@packproof/labels\",\n    \"version\": \"1.0.0\",\n    \"size\": 1395,\n    \"unpackedSize\": 2206,\n    \"shasum\": \"1dd9a778dde69f14e849f1ff57ec117d5ff4417a\",\n    \"integrity\": \"sha512-Npi1wJDGaiYowA0Ci4/SVWhAatx98ocbjh3kK1u9OriqRkXWfe4G/Xp09NJQr/f0T6UIQ1tITeN2Zc55zf6mEw==\",\n    \"filename\": \"packproof-labels-1.0.0.tgz\",\n    \"files\": [\n      {\n        \"path\": \"LICENSE\",\n        \"size\": 1079,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"package.json\",\n        \"size\": 264,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/index.mjs\",\n        \"size\": 822,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/templates/label.txt\",\n        \"size\": 41,\n        \"mode\": 420\n      }\n    ],\n    \"entryCount\": 4,\n    \"bundled\": []\n  }\n]\n",
+        "packStderr": "",
+        "elapsedMs": 356
+      },
+      "consumer": {
+        "consumerDir": "<USER>\\AppData\\Local\\Temp\\packproof-consumer-TE0SQV",
+        "isolationPreconditionMet": true,
+        "installedPkgDir": "<USER>\\AppData\\Local\\Temp\\packproof-consumer-TE0SQV\\node_modules\\@packproof\\labels",
+        "installedPkgName": "@packproof/labels",
+        "installedIsSymlink": false,
+        "installExit": 0,
+        "installSignal": "",
+        "installTimedOut": false,
+        "installError": "",
+        "installStdout": "\nadded 1 package in 295ms\n",
+        "installStderr": "",
+        "elapsedMs": 384
+      },
+      "verify": {
+        "isolation": {
+          "status": "pass",
+          "reason": "Consumer is outside fixture; no ancestor node_modules",
+          "consumerRealpath": "<USER>\\AppData\\Local\\Temp\\packproof-consumer-TE0SQV",
+          "fixtureRealpath": "<PROJECT>\\validation-fixtures\\labels-fixed"
+        },
+        "identity": {
+          "status": "pass",
+          "reason": "Exact expected package manifest and realpath verified",
+          "packageDir": "<USER>\\AppData\\Local\\Temp\\packproof-consumer-TE0SQV\\node_modules\\@packproof\\labels",
+          "packageRealpath": "<USER>\\AppData\\Local\\Temp\\packproof-consumer-TE0SQV\\node_modules\\@packproof\\labels",
+          "packageName": "@packproof/labels",
+          "packageVersion": "1.0.0"
+        },
+        "contractHash": {
+          "status": "pass",
+          "reason": "Contract bytes unchanged",
+          "beforeSHA256": "1E78897D169224B61360CE8AF8C43ED3D35C314094AD8F1683500B17DB086C3B",
+          "afterSHA256": "1E78897D169224B61360CE8AF8C43ED3D35C314094AD8F1683500B17DB086C3B"
+        },
+        "installedBytes": {
+          "status": "pass",
+          "reason": "Every archived regular file matches installed bytes; no extra installed files",
+          "archiveSHA256": "F42B3AE2F5A7DF413CDE2163750F7E9852FCEF0B90A55070E14535CD0E2573E9",
+          "fileCount": 4,
+          "files": [
+            {
+              "path": "LICENSE",
+              "size": 1079,
+              "sha256": "C8F798A292C399111352274C7AB1B3B73712D3425C80EC8F2F3C512D14D03468"
+            },
+            {
+              "path": "package.json",
+              "size": 264,
+              "sha256": "B0F82EAB3929CE4095C825A659F4DAAFA1AF8C04C9395AA714093B0554E64541"
+            },
+            {
+              "path": "src/index.mjs",
+              "size": 822,
+              "sha256": "B3448D3BC65B001DECDC84868E8FBC14AD62F1CAAFA0153F835B758B31F7D40F"
+            },
+            {
+              "path": "src/templates/label.txt",
+              "size": 41,
+              "sha256": "2853185C28F588DBB22C940CFD67894F8BD7AD434CA6928866933A67FBE023DA"
+            }
+          ]
+        },
+        "allRequired": true,
+        "failureReason": "",
+        "before": {
+          "isolation": {
+            "status": "pass",
+            "reason": "Consumer is outside fixture; no ancestor node_modules",
+            "consumerRealpath": "<USER>\\AppData\\Local\\Temp\\packproof-consumer-TE0SQV",
+            "fixtureRealpath": "<PROJECT>\\validation-fixtures\\labels-fixed"
+          },
+          "identity": {
+            "status": "pass",
+            "reason": "Exact expected package manifest and realpath verified",
+            "packageDir": "<USER>\\AppData\\Local\\Temp\\packproof-consumer-TE0SQV\\node_modules\\@packproof\\labels",
+            "packageRealpath": "<USER>\\AppData\\Local\\Temp\\packproof-consumer-TE0SQV\\node_modules\\@packproof\\labels",
+            "packageName": "@packproof/labels",
+            "packageVersion": "1.0.0"
+          },
+          "contractHash": {
+            "status": "pass",
+            "reason": "Contract bytes unchanged",
+            "beforeSHA256": "1E78897D169224B61360CE8AF8C43ED3D35C314094AD8F1683500B17DB086C3B",
+            "afterSHA256": "1E78897D169224B61360CE8AF8C43ED3D35C314094AD8F1683500B17DB086C3B"
+          },
+          "installedBytes": {
+            "status": "pass",
+            "reason": "Every archived regular file matches installed bytes; no extra installed files",
+            "archiveSHA256": "F42B3AE2F5A7DF413CDE2163750F7E9852FCEF0B90A55070E14535CD0E2573E9",
+            "fileCount": 4,
+            "files": [
+              {
+                "path": "LICENSE",
+                "size": 1079,
+                "sha256": "C8F798A292C399111352274C7AB1B3B73712D3425C80EC8F2F3C512D14D03468"
+              },
+              {
+                "path": "package.json",
+                "size": 264,
+                "sha256": "B0F82EAB3929CE4095C825A659F4DAAFA1AF8C04C9395AA714093B0554E64541"
+              },
+              {
+                "path": "src/index.mjs",
+                "size": 822,
+                "sha256": "B3448D3BC65B001DECDC84868E8FBC14AD62F1CAAFA0153F835B758B31F7D40F"
+              },
+              {
+                "path": "src/templates/label.txt",
+                "size": 41,
+                "sha256": "2853185C28F588DBB22C940CFD67894F8BD7AD434CA6928866933A67FBE023DA"
+              }
+            ]
+          },
+          "allRequired": true,
+          "failureReason": ""
+        },
+        "contractHashAfter": {
+          "status": "pass",
+          "reason": "Contract bytes unchanged",
+          "beforeSHA256": "1E78897D169224B61360CE8AF8C43ED3D35C314094AD8F1683500B17DB086C3B",
+          "afterSHA256": "1E78897D169224B61360CE8AF8C43ED3D35C314094AD8F1683500B17DB086C3B"
+        }
+      },
+      "contract": {
+        "contractFile": "<PROJECT>\\validation-fixtures\\contracts\\label-operation.mjs",
+        "contractCopiedPath": "<USER>\\AppData\\Local\\Temp\\packproof-consumer-TE0SQV\\contract.mjs",
+        "contractCopiedSHA256": "1E78897D169224B61360CE8AF8C43ED3D35C314094AD8F1683500B17DB086C3B",
+        "exitCode": 0,
+        "signal": "",
+        "stdout": "{\"contract\":\"label-operation-v1\",\"actual\":\"SKU-042 | QTY 12 | BIN B-7\\n\"}\n",
+        "stderr": "",
+        "timedOut": false,
+        "elapsedMs": 51,
+        "timeoutMs": 15000,
+        "error": ""
+      },
+      "result": {
+        "outcome": "PASS",
+        "reason": "Contract exited 0"
+      },
+      "sourceBaseline": {
+        "status": "not-run",
+        "reason": "Source baseline not requested in single-case mode"
+      },
+      "expectedOutcome": "PASS"
+    },
+    {
+      "$schema": "packproof-report-v1",
+      "runId": "260769ed-de7d-4d8e-9b9b-c8eb437dc18f",
+      "recordedAt": "2026-09-25T20:44:35.924Z",
+      "caseName": "fixed-wrong-expectation",
+      "provenance": "Core implementation and tasks 01–03 by IBM Bob IDE; fixtures, independent review and final evidence corrections by Codex",
+      "commands": {
+        "pack": [
+          "C:\\Program Files\\nodejs\\node.exe",
+          "C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js",
+          "pack",
+          "--ignore-scripts",
+          "--json",
+          "--pack-destination",
+          "<USER>\\Documents\\Codex\\2026-09-09\\tengo\\outputs\\ibm-bob-2\\validation-final-2026-09-25\\demo\\260769ed-de7d-4d8e-9b9b-c8eb437dc18f\\archive"
+        ],
+        "install": [
+          "C:\\Program Files\\nodejs\\node.exe",
+          "C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js",
+          "install",
+          "--ignore-scripts",
+          "--offline",
+          "--no-audit",
+          "--no-fund",
+          "--package-lock=false",
+          "--save=false",
+          "<USER>\\Documents\\Codex\\2026-09-09\\tengo\\outputs\\ibm-bob-2\\validation-final-2026-09-25\\demo\\260769ed-de7d-4d8e-9b9b-c8eb437dc18f\\archive\\packproof-labels-1.0.0.tgz"
+        ],
+        "contract": [
+          "C:\\Program Files\\nodejs\\node.exe",
+          "./contract.mjs"
+        ]
+      },
+      "environment": {
+        "node": "v24.16.0",
+        "npm": "11.13.0",
+        "platform": "win32",
+        "arch": "x64",
+        "npmCliJs": "C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js"
+      },
+      "archive": {
+        "fixtureDir": "<PROJECT>\\validation-fixtures\\labels-fixed",
+        "tarballPath": "<USER>\\Documents\\Codex\\2026-09-09\\tengo\\outputs\\ibm-bob-2\\validation-final-2026-09-25\\demo\\260769ed-de7d-4d8e-9b9b-c8eb437dc18f\\archive\\packproof-labels-1.0.0.tgz",
+        "archiveSHA256": "F42B3AE2F5A7DF413CDE2163750F7E9852FCEF0B90A55070E14535CD0E2573E9",
+        "packageName": "@packproof/labels",
+        "packedFiles": [
+          "LICENSE",
+          "package.json",
+          "src/index.mjs",
+          "src/templates/label.txt"
+        ],
+        "packExit": 0,
+        "packSignal": "",
+        "packTimedOut": false,
+        "packError": "",
+        "packStdout": "[\n  {\n    \"id\": \"@packproof/labels@1.0.0\",\n    \"name\": \"@packproof/labels\",\n    \"version\": \"1.0.0\",\n    \"size\": 1395,\n    \"unpackedSize\": 2206,\n    \"shasum\": \"1dd9a778dde69f14e849f1ff57ec117d5ff4417a\",\n    \"integrity\": \"sha512-Npi1wJDGaiYowA0Ci4/SVWhAatx98ocbjh3kK1u9OriqRkXWfe4G/Xp09NJQr/f0T6UIQ1tITeN2Zc55zf6mEw==\",\n    \"filename\": \"packproof-labels-1.0.0.tgz\",\n    \"files\": [\n      {\n        \"path\": \"LICENSE\",\n        \"size\": 1079,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"package.json\",\n        \"size\": 264,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/index.mjs\",\n        \"size\": 822,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/templates/label.txt\",\n        \"size\": 41,\n        \"mode\": 420\n      }\n    ],\n    \"entryCount\": 4,\n    \"bundled\": []\n  }\n]\n",
+        "packStderr": "",
+        "elapsedMs": 344
+      },
+      "consumer": {
+        "consumerDir": "<USER>\\AppData\\Local\\Temp\\packproof-consumer-i4SXPD",
+        "isolationPreconditionMet": true,
+        "installedPkgDir": "<USER>\\AppData\\Local\\Temp\\packproof-consumer-i4SXPD\\node_modules\\@packproof\\labels",
+        "installedPkgName": "@packproof/labels",
+        "installedIsSymlink": false,
+        "installExit": 0,
+        "installSignal": "",
+        "installTimedOut": false,
+        "installError": "",
+        "installStdout": "\nadded 1 package in 286ms\n",
+        "installStderr": "",
+        "elapsedMs": 375
+      },
+      "verify": {
+        "isolation": {
+          "status": "pass",
+          "reason": "Consumer is outside fixture; no ancestor node_modules",
+          "consumerRealpath": "<USER>\\AppData\\Local\\Temp\\packproof-consumer-i4SXPD",
+          "fixtureRealpath": "<PROJECT>\\validation-fixtures\\labels-fixed"
+        },
+        "identity": {
+          "status": "pass",
+          "reason": "Exact expected package manifest and realpath verified",
+          "packageDir": "<USER>\\AppData\\Local\\Temp\\packproof-consumer-i4SXPD\\node_modules\\@packproof\\labels",
+          "packageRealpath": "<USER>\\AppData\\Local\\Temp\\packproof-consumer-i4SXPD\\node_modules\\@packproof\\labels",
+          "packageName": "@packproof/labels",
+          "packageVersion": "1.0.0"
+        },
+        "contractHash": {
+          "status": "pass",
+          "reason": "Contract bytes unchanged",
+          "beforeSHA256": "29C2DC74B5DF56BBCC13E68C6514FACD48B2D3D23A1E1F71B0A42C27F4B8F45B",
+          "afterSHA256": "29C2DC74B5DF56BBCC13E68C6514FACD48B2D3D23A1E1F71B0A42C27F4B8F45B"
+        },
+        "installedBytes": {
+          "status": "pass",
+          "reason": "Every archived regular file matches installed bytes; no extra installed files",
+          "archiveSHA256": "F42B3AE2F5A7DF413CDE2163750F7E9852FCEF0B90A55070E14535CD0E2573E9",
+          "fileCount": 4,
+          "files": [
+            {
+              "path": "LICENSE",
+              "size": 1079,
+              "sha256": "C8F798A292C399111352274C7AB1B3B73712D3425C80EC8F2F3C512D14D03468"
+            },
+            {
+              "path": "package.json",
+              "size": 264,
+              "sha256": "B0F82EAB3929CE4095C825A659F4DAAFA1AF8C04C9395AA714093B0554E64541"
+            },
+            {
+              "path": "src/index.mjs",
+              "size": 822,
+              "sha256": "B3448D3BC65B001DECDC84868E8FBC14AD62F1CAAFA0153F835B758B31F7D40F"
+            },
+            {
+              "path": "src/templates/label.txt",
+              "size": 41,
+              "sha256": "2853185C28F588DBB22C940CFD67894F8BD7AD434CA6928866933A67FBE023DA"
+            }
+          ]
+        },
+        "allRequired": true,
+        "failureReason": "",
+        "before": {
+          "isolation": {
+            "status": "pass",
+            "reason": "Consumer is outside fixture; no ancestor node_modules",
+            "consumerRealpath": "<USER>\\AppData\\Local\\Temp\\packproof-consumer-i4SXPD",
+            "fixtureRealpath": "<PROJECT>\\validation-fixtures\\labels-fixed"
+          },
+          "identity": {
+            "status": "pass",
+            "reason": "Exact expected package manifest and realpath verified",
+            "packageDir": "<USER>\\AppData\\Local\\Temp\\packproof-consumer-i4SXPD\\node_modules\\@packproof\\labels",
+            "packageRealpath": "<USER>\\AppData\\Local\\Temp\\packproof-consumer-i4SXPD\\node_modules\\@packproof\\labels",
+            "packageName": "@packproof/labels",
+            "packageVersion": "1.0.0"
+          },
+          "contractHash": {
+            "status": "pass",
+            "reason": "Contract bytes unchanged",
+            "beforeSHA256": "29C2DC74B5DF56BBCC13E68C6514FACD48B2D3D23A1E1F71B0A42C27F4B8F45B",
+            "afterSHA256": "29C2DC74B5DF56BBCC13E68C6514FACD48B2D3D23A1E1F71B0A42C27F4B8F45B"
+          },
+          "installedBytes": {
+            "status": "pass",
+            "reason": "Every archived regular file matches installed bytes; no extra installed files",
+            "archiveSHA256": "F42B3AE2F5A7DF413CDE2163750F7E9852FCEF0B90A55070E14535CD0E2573E9",
+            "fileCount": 4,
+            "files": [
+              {
+                "path": "LICENSE",
+                "size": 1079,
+                "sha256": "C8F798A292C399111352274C7AB1B3B73712D3425C80EC8F2F3C512D14D03468"
+              },
+              {
+                "path": "package.json",
+                "size": 264,
+                "sha256": "B0F82EAB3929CE4095C825A659F4DAAFA1AF8C04C9395AA714093B0554E64541"
+              },
+              {
+                "path": "src/index.mjs",
+                "size": 822,
+                "sha256": "B3448D3BC65B001DECDC84868E8FBC14AD62F1CAAFA0153F835B758B31F7D40F"
+              },
+              {
+                "path": "src/templates/label.txt",
+                "size": 41,
+                "sha256": "2853185C28F588DBB22C940CFD67894F8BD7AD434CA6928866933A67FBE023DA"
+              }
+            ]
+          },
+          "allRequired": true,
+          "failureReason": ""
+        },
+        "contractHashAfter": {
+          "status": "pass",
+          "reason": "Contract bytes unchanged",
+          "beforeSHA256": "29C2DC74B5DF56BBCC13E68C6514FACD48B2D3D23A1E1F71B0A42C27F4B8F45B",
+          "afterSHA256": "29C2DC74B5DF56BBCC13E68C6514FACD48B2D3D23A1E1F71B0A42C27F4B8F45B"
+        }
+      },
+      "contract": {
+        "contractFile": "<PROJECT>\\validation-fixtures\\contracts\\label-wrong-expectation.mjs",
+        "contractCopiedPath": "<USER>\\AppData\\Local\\Temp\\packproof-consumer-i4SXPD\\contract.mjs",
+        "contractCopiedSHA256": "29C2DC74B5DF56BBCC13E68C6514FACD48B2D3D23A1E1F71B0A42C27F4B8F45B",
+        "exitCode": 1,
+        "signal": "",
+        "stdout": "",
+        "stderr": "node:internal/modules/run_main:107\r\n    triggerUncaughtException(\r\n    ^\r\n\r\nAssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\r\n+ actual - expected\r\n\r\n+ 'SKU-042 | QTY 12 | BIN B-7\\n'\r\n- 'SKU-042 | QTY 999 | BIN B-7\\n'\r\n                 ^\r\n\r\n    at file:///<USER>/AppData/Local/Temp/packproof-consumer-i4SXPD/contract.mjs:6:8\r\n    at ModuleJob.run (node:internal/modules/esm/module_job:439:25)\r\n    at async node:internal/modules/esm/loader:633:26\r\n    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5) {\r\n  generatedMessage: true,\r\n  code: 'ERR_ASSERTION',\r\n  actual: 'SKU-042 | QTY 12 | BIN B-7\\n',\r\n  expected: 'SKU-042 | QTY 999 | BIN B-7\\n',\r\n  operator: 'strictEqual',\r\n  diff: 'simple'\r\n}\r\n\r\nNode.js v24.16.0\r\n",
+        "timedOut": false,
+        "elapsedMs": 51,
+        "timeoutMs": 15000,
+        "error": ""
+      },
+      "result": {
+        "outcome": "FAIL",
+        "reason": "Contract exited 1"
+      },
+      "sourceBaseline": {
+        "status": "not-run",
+        "reason": "Source baseline not requested in single-case mode"
+      },
+      "expectedOutcome": "FAIL"
+    },
+    {
+      "$schema": "packproof-report-v1",
+      "runId": "f70d3442-f611-4ce5-b83c-0147cc674fb6",
+      "recordedAt": "2026-09-25T20:44:36.829Z",
+      "caseName": "broken-export-operation",
+      "provenance": "Core implementation and tasks 01–03 by IBM Bob IDE; fixtures, independent review and final evidence corrections by Codex",
+      "commands": {
+        "pack": [
+          "C:\\Program Files\\nodejs\\node.exe",
+          "C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js",
+          "pack",
+          "--ignore-scripts",
+          "--json",
+          "--pack-destination",
+          "<USER>\\Documents\\Codex\\2026-09-09\\tengo\\outputs\\ibm-bob-2\\validation-final-2026-09-25\\demo\\f70d3442-f611-4ce5-b83c-0147cc674fb6\\archive"
+        ],
+        "install": [
+          "C:\\Program Files\\nodejs\\node.exe",
+          "C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js",
+          "install",
+          "--ignore-scripts",
+          "--offline",
+          "--no-audit",
+          "--no-fund",
+          "--package-lock=false",
+          "--save=false",
+          "<USER>\\Documents\\Codex\\2026-09-09\\tengo\\outputs\\ibm-bob-2\\validation-final-2026-09-25\\demo\\f70d3442-f611-4ce5-b83c-0147cc674fb6\\archive\\packproof-labels-1.0.0.tgz"
+        ],
+        "contract": [
+          "C:\\Program Files\\nodejs\\node.exe",
+          "./contract.mjs"
+        ]
+      },
+      "environment": {
+        "node": "v24.16.0",
+        "npm": "11.13.0",
+        "platform": "win32",
+        "arch": "x64",
+        "npmCliJs": "C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js"
+      },
+      "archive": {
+        "fixtureDir": "<PROJECT>\\validation-fixtures\\labels-broken-export",
+        "tarballPath": "<USER>\\Documents\\Codex\\2026-09-09\\tengo\\outputs\\ibm-bob-2\\validation-final-2026-09-25\\demo\\f70d3442-f611-4ce5-b83c-0147cc674fb6\\archive\\packproof-labels-1.0.0.tgz",
+        "archiveSHA256": "516020DCC01AE55D44AD4ED67F0494C72D31180FD21C00592CA64B5896CD58D9",
+        "packageName": "@packproof/labels",
+        "packedFiles": [
+          "LICENSE",
+          "package.json",
+          "src/index.mjs",
+          "src/templates/label.txt"
+        ],
+        "packExit": 0,
+        "packSignal": "",
+        "packTimedOut": false,
+        "packError": "",
+        "packStdout": "[\n  {\n    \"id\": \"@packproof/labels@1.0.0\",\n    \"name\": \"@packproof/labels\",\n    \"version\": \"1.0.0\",\n    \"size\": 1404,\n    \"unpackedSize\": 2210,\n    \"shasum\": \"7bfd35f795f68a71c6bbf8c03606254e4197e273\",\n    \"integrity\": \"sha512-NKcIkykmhE03tDEPEDkJpKmuhvl5oxWZfXP+UpmNjK/fvwuKJ0NjNeef/IGpzJ0YZyl+ZvS9XT8mclz4nRELhg==\",\n    \"filename\": \"packproof-labels-1.0.0.tgz\",\n    \"files\": [\n      {\n        \"path\": \"LICENSE\",\n        \"size\": 1079,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"package.json\",\n        \"size\": 268,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/index.mjs\",\n        \"size\": 822,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/templates/label.txt\",\n        \"size\": 41,\n        \"mode\": 420\n      }\n    ],\n    \"entryCount\": 4,\n    \"bundled\": []\n  }\n]\n",
+        "packStderr": "",
+        "elapsedMs": 348
+      },
+      "consumer": {
+        "consumerDir": "<USER>\\AppData\\Local\\Temp\\packproof-consumer-otJLzM",
+        "isolationPreconditionMet": true,
+        "installedPkgDir": "<USER>\\AppData\\Local\\Temp\\packproof-consumer-otJLzM\\node_modules\\@packproof\\labels",
+        "installedPkgName": "@packproof/labels",
+        "installedIsSymlink": false,
+        "installExit": 0,
+        "installSignal": "",
+        "installTimedOut": false,
+        "installError": "",
+        "installStdout": "\nadded 1 package in 287ms\n",
+        "installStderr": "",
+        "elapsedMs": 381
+      },
+      "verify": {
+        "isolation": {
+          "status": "pass",
+          "reason": "Consumer is outside fixture; no ancestor node_modules",
+          "consumerRealpath": "<USER>\\AppData\\Local\\Temp\\packproof-consumer-otJLzM",
+          "fixtureRealpath": "<PROJECT>\\validation-fixtures\\labels-broken-export"
+        },
+        "identity": {
+          "status": "pass",
+          "reason": "Exact expected package manifest and realpath verified",
+          "packageDir": "<USER>\\AppData\\Local\\Temp\\packproof-consumer-otJLzM\\node_modules\\@packproof\\labels",
+          "packageRealpath": "<USER>\\AppData\\Local\\Temp\\packproof-consumer-otJLzM\\node_modules\\@packproof\\labels",
+          "packageName": "@packproof/labels",
+          "packageVersion": "1.0.0"
+        },
+        "contractHash": {
+          "status": "pass",
+          "reason": "Contract bytes unchanged",
+          "beforeSHA256": "1E78897D169224B61360CE8AF8C43ED3D35C314094AD8F1683500B17DB086C3B",
+          "afterSHA256": "1E78897D169224B61360CE8AF8C43ED3D35C314094AD8F1683500B17DB086C3B"
+        },
+        "installedBytes": {
+          "status": "pass",
+          "reason": "Every archived regular file matches installed bytes; no extra installed files",
+          "archiveSHA256": "516020DCC01AE55D44AD4ED67F0494C72D31180FD21C00592CA64B5896CD58D9",
+          "fileCount": 4,
+          "files": [
+            {
+              "path": "LICENSE",
+              "size": 1079,
+              "sha256": "C8F798A292C399111352274C7AB1B3B73712D3425C80EC8F2F3C512D14D03468"
+            },
+            {
+              "path": "package.json",
+              "size": 268,
+              "sha256": "7F96EEFD605019E0C0FC7457DCFA1D1F597E940220B029BCE8BF05334D1000E3"
+            },
+            {
+              "path": "src/index.mjs",
+              "size": 822,
+              "sha256": "B3448D3BC65B001DECDC84868E8FBC14AD62F1CAAFA0153F835B758B31F7D40F"
+            },
+            {
+              "path": "src/templates/label.txt",
+              "size": 41,
+              "sha256": "2853185C28F588DBB22C940CFD67894F8BD7AD434CA6928866933A67FBE023DA"
+            }
+          ]
+        },
+        "allRequired": true,
+        "failureReason": "",
+        "before": {
+          "isolation": {
+            "status": "pass",
+            "reason": "Consumer is outside fixture; no ancestor node_modules",
+            "consumerRealpath": "<USER>\\AppData\\Local\\Temp\\packproof-consumer-otJLzM",
+            "fixtureRealpath": "<PROJECT>\\validation-fixtures\\labels-broken-export"
+          },
+          "identity": {
+            "status": "pass",
+            "reason": "Exact expected package manifest and realpath verified",
+            "packageDir": "<USER>\\AppData\\Local\\Temp\\packproof-consumer-otJLzM\\node_modules\\@packproof\\labels",
+            "packageRealpath": "<USER>\\AppData\\Local\\Temp\\packproof-consumer-otJLzM\\node_modules\\@packproof\\labels",
+            "packageName": "@packproof/labels",
+            "packageVersion": "1.0.0"
+          },
+          "contractHash": {
+            "status": "pass",
+            "reason": "Contract bytes unchanged",
+            "beforeSHA256": "1E78897D169224B61360CE8AF8C43ED3D35C314094AD8F1683500B17DB086C3B",
+            "afterSHA256": "1E78897D169224B61360CE8AF8C43ED3D35C314094AD8F1683500B17DB086C3B"
+          },
+          "installedBytes": {
+            "status": "pass",
+            "reason": "Every archived regular file matches installed bytes; no extra installed files",
+            "archiveSHA256": "516020DCC01AE55D44AD4ED67F0494C72D31180FD21C00592CA64B5896CD58D9",
+            "fileCount": 4,
+            "files": [
+              {
+                "path": "LICENSE",
+                "size": 1079,
+                "sha256": "C8F798A292C399111352274C7AB1B3B73712D3425C80EC8F2F3C512D14D03468"
+              },
+              {
+                "path": "package.json",
+                "size": 268,
+                "sha256": "7F96EEFD605019E0C0FC7457DCFA1D1F597E940220B029BCE8BF05334D1000E3"
+              },
+              {
+                "path": "src/index.mjs",
+                "size": 822,
+                "sha256": "B3448D3BC65B001DECDC84868E8FBC14AD62F1CAAFA0153F835B758B31F7D40F"
+              },
+              {
+                "path": "src/templates/label.txt",
+                "size": 41,
+                "sha256": "2853185C28F588DBB22C940CFD67894F8BD7AD434CA6928866933A67FBE023DA"
+              }
+            ]
+          },
+          "allRequired": true,
+          "failureReason": ""
+        },
+        "contractHashAfter": {
+          "status": "pass",
+          "reason": "Contract bytes unchanged",
+          "beforeSHA256": "1E78897D169224B61360CE8AF8C43ED3D35C314094AD8F1683500B17DB086C3B",
+          "afterSHA256": "1E78897D169224B61360CE8AF8C43ED3D35C314094AD8F1683500B17DB086C3B"
+        }
+      },
+      "contract": {
+        "contractFile": "<PROJECT>\\validation-fixtures\\contracts\\label-operation.mjs",
+        "contractCopiedPath": "<USER>\\AppData\\Local\\Temp\\packproof-consumer-otJLzM\\contract.mjs",
+        "contractCopiedSHA256": "1E78897D169224B61360CE8AF8C43ED3D35C314094AD8F1683500B17DB086C3B",
+        "exitCode": 1,
+        "signal": "",
+        "stdout": "",
+        "stderr": "node:internal/modules/esm/resolve:271\r\n    throw new ERR_MODULE_NOT_FOUND(\r\n          ^\r\n\r\nError [ERR_MODULE_NOT_FOUND]: Cannot find module '<USER>\\AppData\\Local\\Temp\\packproof-consumer-otJLzM\\node_modules\\@packproof\\labels\\dist\\not-here.mjs' imported from <USER>\\AppData\\Local\\Temp\\packproof-consumer-otJLzM\\contract.mjs\r\n    at finalizeResolution (node:internal/modules/esm/resolve:271:11)\r\n    at moduleResolve (node:internal/modules/esm/resolve:865:10)\r\n    at defaultResolve (node:internal/modules/esm/resolve:992:11)\r\n    at #cachedDefaultResolve (node:internal/modules/esm/loader:691:20)\r\n    at #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:708:38)\r\n    at ModuleLoader.resolveSync (node:internal/modules/esm/loader:740:52)\r\n    at #resolve (node:internal/modules/esm/loader:673:17)\r\n    at ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:593:35)\r\n    at ModuleJob.syncLink (node:internal/modules/esm/module_job:163:33)\r\n    at ModuleJob.link (node:internal/modules/esm/module_job:253:17) {\r\n  code: 'ERR_MODULE_NOT_FOUND',\r\n  url: 'file:///<USER>/AppData/Local/Temp/packproof-consumer-otJLzM/node_modules/@packproof/labels/dist/not-here.mjs'\r\n}\r\n\r\nNode.js v24.16.0\r\n",
+        "timedOut": false,
+        "elapsedMs": 53,
+        "timeoutMs": 15000,
+        "error": ""
+      },
+      "result": {
+        "outcome": "FAIL",
+        "reason": "Contract exited 1"
+      },
+      "sourceBaseline": {
+        "status": "not-run",
+        "reason": "Source baseline not requested in single-case mode"
+      },
+      "expectedOutcome": "FAIL"
+    },
+    {
+      "$schema": "packproof-report-v1",
+      "runId": "4acf95ba-1b88-49fd-8d92-9e770316c0c2",
+      "recordedAt": "2026-09-25T20:44:37.745Z",
+      "caseName": "tally-operation",
+      "provenance": "Core implementation and tasks 01–03 by IBM Bob IDE; fixtures, independent review and final evidence corrections by Codex",
+      "commands": {
+        "pack": [
+          "C:\\Program Files\\nodejs\\node.exe",
+          "C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js",
+          "pack",
+          "--ignore-scripts",
+          "--json",
+          "--pack-destination",
+          "<USER>\\Documents\\Codex\\2026-09-09\\tengo\\outputs\\ibm-bob-2\\validation-final-2026-09-25\\demo\\4acf95ba-1b88-49fd-8d92-9e770316c0c2\\archive"
+        ],
+        "install": [
+          "C:\\Program Files\\nodejs\\node.exe",
+          "C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js",
+          "install",
+          "--ignore-scripts",
+          "--offline",
+          "--no-audit",
+          "--no-fund",
+          "--package-lock=false",
+          "--save=false",
+          "<USER>\\Documents\\Codex\\2026-09-09\\tengo\\outputs\\ibm-bob-2\\validation-final-2026-09-25\\demo\\4acf95ba-1b88-49fd-8d92-9e770316c0c2\\archive\\packproof-tally-1.0.0.tgz"
+        ],
+        "contract": [
+          "C:\\Program Files\\nodejs\\node.exe",
+          "./contract.mjs"
+        ]
+      },
+      "environment": {
+        "node": "v24.16.0",
+        "npm": "11.13.0",
+        "platform": "win32",
+        "arch": "x64",
+        "npmCliJs": "C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js"
+      },
+      "archive": {
+        "fixtureDir": "<PROJECT>\\validation-fixtures\\tally",
+        "tarballPath": "<USER>\\Documents\\Codex\\2026-09-09\\tengo\\outputs\\ibm-bob-2\\validation-final-2026-09-25\\demo\\4acf95ba-1b88-49fd-8d92-9e770316c0c2\\archive\\packproof-tally-1.0.0.tgz",
+        "archiveSHA256": "79CBD43CBBBCD751D0F168EA6E0DE29DDADF89D60594FB7A96CEDB17F1E80348",
+        "packageName": "@packproof/tally",
+        "packedFiles": [
+          "LICENSE",
+          "data/units.json",
+          "lib/summary.cjs",
+          "package.json"
+        ],
+        "packExit": 0,
+        "packSignal": "",
+        "packTimedOut": false,
+        "packError": "",
+        "packStdout": "[\n  {\n    \"id\": \"@packproof/tally@1.0.0\",\n    \"name\": \"@packproof/tally\",\n    \"version\": \"1.0.0\",\n    \"size\": 1367,\n    \"unpackedSize\": 2146,\n    \"shasum\": \"534e811acf5ac9ae5944b4f2f557b4cf4dbc1d01\",\n    \"integrity\": \"sha512-tLhbg9wPvb2w13em1sXpcTZz4cJOhQeswA3AHuHzeYnt7p72cnsvMNsnupRTzai7NT31ii6eAMnnJP3iiSyR/A==\",\n    \"filename\": \"packproof-tally-1.0.0.tgz\",\n    \"files\": [\n      {\n        \"path\": \"LICENSE\",\n        \"size\": 1079,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"data/units.json\",\n        \"size\": 30,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"lib/summary.cjs\",\n        \"size\": 792,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"package.json\",\n        \"size\": 245,\n        \"mode\": 420\n      }\n    ],\n    \"entryCount\": 4,\n    \"bundled\": []\n  }\n]\n",
+        "packStderr": "",
+        "elapsedMs": 357
+      },
+      "consumer": {
+        "consumerDir": "<USER>\\AppData\\Local\\Temp\\packproof-consumer-M0PNWC",
+        "isolationPreconditionMet": true,
+        "installedPkgDir": "<USER>\\AppData\\Local\\Temp\\packproof-consumer-M0PNWC\\node_modules\\@packproof\\tally",
+        "installedPkgName": "@packproof/tally",
+        "installedIsSymlink": false,
+        "installExit": 0,
+        "installSignal": "",
+        "installTimedOut": false,
+        "installError": "",
+        "installStdout": "\nadded 1 package in 294ms\n",
+        "installStderr": "",
+        "elapsedMs": 384
+      },
+      "verify": {
+        "isolation": {
+          "status": "pass",
+          "reason": "Consumer is outside fixture; no ancestor node_modules",
+          "consumerRealpath": "<USER>\\AppData\\Local\\Temp\\packproof-consumer-M0PNWC",
+          "fixtureRealpath": "<PROJECT>\\validation-fixtures\\tally"
+        },
+        "identity": {
+          "status": "pass",
+          "reason": "Exact expected package manifest and realpath verified",
+          "packageDir": "<USER>\\AppData\\Local\\Temp\\packproof-consumer-M0PNWC\\node_modules\\@packproof\\tally",
+          "packageRealpath": "<USER>\\AppData\\Local\\Temp\\packproof-consumer-M0PNWC\\node_modules\\@packproof\\tally",
+          "packageName": "@packproof/tally",
+          "packageVersion": "1.0.0"
+        },
+        "contractHash": {
+          "status": "pass",
+          "reason": "Contract bytes unchanged",
+          "beforeSHA256": "A89B4725BE981ECBB8F69D368E28E73DF61567ECF3F4FEA334066ADB4BA5B181",
+          "afterSHA256": "A89B4725BE981ECBB8F69D368E28E73DF61567ECF3F4FEA334066ADB4BA5B181"
+        },
+        "installedBytes": {
+          "status": "pass",
+          "reason": "Every archived regular file matches installed bytes; no extra installed files",
+          "archiveSHA256": "79CBD43CBBBCD751D0F168EA6E0DE29DDADF89D60594FB7A96CEDB17F1E80348",
+          "fileCount": 4,
+          "files": [
+            {
+              "path": "LICENSE",
+              "size": 1079,
+              "sha256": "C8F798A292C399111352274C7AB1B3B73712D3425C80EC8F2F3C512D14D03468"
+            },
+            {
+              "path": "lib/summary.cjs",
+              "size": 792,
+              "sha256": "D464AA03A64839A2E1E3F5E772592CD8557FA7C224FB2BB5953F8FE6AF77B8BF"
+            },
+            {
+              "path": "package.json",
+              "size": 245,
+              "sha256": "4866A257601DF73CBC62F9003741CFA122F7FA2DDD1AE0B74A3934F83836E87B"
+            },
+            {
+              "path": "data/units.json",
+              "size": 30,
+              "sha256": "20D0F66649536ED8954FC1C1F76F2763B58DCE4833A47B3D98EFA4ECC5902398"
+            }
+          ]
+        },
+        "allRequired": true,
+        "failureReason": "",
+        "before": {
+          "isolation": {
+            "status": "pass",
+            "reason": "Consumer is outside fixture; no ancestor node_modules",
+            "consumerRealpath": "<USER>\\AppData\\Local\\Temp\\packproof-consumer-M0PNWC",
+            "fixtureRealpath": "<PROJECT>\\validation-fixtures\\tally"
+          },
+          "identity": {
+            "status": "pass",
+            "reason": "Exact expected package manifest and realpath verified",
+            "packageDir": "<USER>\\AppData\\Local\\Temp\\packproof-consumer-M0PNWC\\node_modules\\@packproof\\tally",
+            "packageRealpath": "<USER>\\AppData\\Local\\Temp\\packproof-consumer-M0PNWC\\node_modules\\@packproof\\tally",
+            "packageName": "@packproof/tally",
+            "packageVersion": "1.0.0"
+          },
+          "contractHash": {
+            "status": "pass",
+            "reason": "Contract bytes unchanged",
+            "beforeSHA256": "A89B4725BE981ECBB8F69D368E28E73DF61567ECF3F4FEA334066ADB4BA5B181",
+            "afterSHA256": "A89B4725BE981ECBB8F69D368E28E73DF61567ECF3F4FEA334066ADB4BA5B181"
+          },
+          "installedBytes": {
+            "status": "pass",
+            "reason": "Every archived regular file matches installed bytes; no extra installed files",
+            "archiveSHA256": "79CBD43CBBBCD751D0F168EA6E0DE29DDADF89D60594FB7A96CEDB17F1E80348",
+            "fileCount": 4,
+            "files": [
+              {
+                "path": "LICENSE",
+                "size": 1079,
+                "sha256": "C8F798A292C399111352274C7AB1B3B73712D3425C80EC8F2F3C512D14D03468"
+              },
+              {
+                "path": "lib/summary.cjs",
+                "size": 792,
+                "sha256": "D464AA03A64839A2E1E3F5E772592CD8557FA7C224FB2BB5953F8FE6AF77B8BF"
+              },
+              {
+                "path": "package.json",
+                "size": 245,
+                "sha256": "4866A257601DF73CBC62F9003741CFA122F7FA2DDD1AE0B74A3934F83836E87B"
+              },
+              {
+                "path": "data/units.json",
+                "size": 30,
+                "sha256": "20D0F66649536ED8954FC1C1F76F2763B58DCE4833A47B3D98EFA4ECC5902398"
+              }
+            ]
+          },
+          "allRequired": true,
+          "failureReason": ""
+        },
+        "contractHashAfter": {
+          "status": "pass",
+          "reason": "Contract bytes unchanged",
+          "beforeSHA256": "A89B4725BE981ECBB8F69D368E28E73DF61567ECF3F4FEA334066ADB4BA5B181",
+          "afterSHA256": "A89B4725BE981ECBB8F69D368E28E73DF61567ECF3F4FEA334066ADB4BA5B181"
+        }
+      },
+      "contract": {
+        "contractFile": "<PROJECT>\\validation-fixtures\\contracts\\tally-operation.mjs",
+        "contractCopiedPath": "<USER>\\AppData\\Local\\Temp\\packproof-consumer-M0PNWC\\contract.mjs",
+        "contractCopiedSHA256": "A89B4725BE981ECBB8F69D368E28E73DF61567ECF3F4FEA334066ADB4BA5B181",
+        "exitCode": 0,
+        "signal": "",
+        "stdout": "{\"contract\":\"tally-operation-v1\",\"actual\":{\"totalUnits\":11,\"lineCount\":2}}\n",
+        "stderr": "",
+        "timedOut": false,
+        "elapsedMs": 54,
+        "timeoutMs": 15000,
+        "error": ""
+      },
+      "result": {
+        "outcome": "PASS",
+        "reason": "Contract exited 0"
+      },
+      "sourceBaseline": {
+        "status": "not-run",
+        "reason": "Source baseline not requested in single-case mode"
+      },
+      "expectedOutcome": "PASS"
+    }
+  ],
+  "evidenceNote": "Saved local Windows executions. Host paths redacted for sharing; outputs, outcomes and artifact hashes retained. These records are not browser executions, independent attestations or signatures.",
+  "validated": true
+}

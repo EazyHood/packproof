@@ -22,6 +22,16 @@ Set `NPM_EXECPATH` to a valid absolute npm-cli.js path if discovery alongside No
 
 ## Read the result
 
+The static viewer in `viewer/` includes six genuine saved reports from the verified Windows run, with personal host paths redacted. It compares the omitted-template archive with the repaired archive and exposes commands, output, hashes and checks. It also accepts your own report JSON locally; it does not execute packages in the browser. See [viewer/README.md](viewer/README.md) for controls and the report format.
+
+With Python available, serve it from the repository root:
+
+```sh
+python -m http.server 4173 --bind 127.0.0.1 --directory viewer
+```
+
+Open `http://127.0.0.1:4173`. To replace the saved collection after running a new demo, run `node scripts/export-viewer.mjs <demo-summary.json>` from the checkout used for that execution. The exporter records the current commit and redacts common local user paths; review outputs for other private data before sharing.
+
 | Outcome | Meaning |
 |---|---|
 | PASS | The explicit contract exited zero and required evidence checks passed. |
