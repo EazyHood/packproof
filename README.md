@@ -2,6 +2,8 @@
 
 **Source tests passed. Does the archive still do the job?**
 
+[Explore the live evidence viewer](https://eazyhood.github.io/packproof/) · [Validation](VALIDATION.md) · [IBM Bob session evidence](bob_sessions/index.md)
+
 PackProof packages a trusted local npm fixture, installs its exact tarball in a fresh consumer, and executes an explicit consumer contract. It preserves the archive hash, file list, installed-byte comparison, contract hashes, outputs and verification results in a JSON report.
 
 The demo uses a small label library whose source can read a template that the broken archive omits. The same consumer expectation fails after install, then passes when the template is included. Importing alone misses this defect. A separate CommonJS package and deliberate negative controls keep the demonstration honest.
@@ -65,4 +67,4 @@ The baseline comprises synthetic fixtures, not customer usage or a performance s
 
 ## Provenance
 
-IBM Bob IDE implemented the CLI and report pipeline through tasks 01–03. Codex specified independent fixtures, executed baselines, reviewed the implementation, corrected remaining evidence edge cases and prepared presentation assets. See PROVENANCE.md and bob_sessions/README.md for the actual state of session evidence. No screenshots, usage totals or prizes are inferred from code changes.
+IBM Bob IDE implemented the CLI and report pipeline through phases 01–03 in one development task. Codex specified independent fixtures, executed baselines, reviewed the implementation, corrected remaining evidence edge cases and prepared presentation assets. See PROVENANCE.md and bob_sessions/README.md for the actual state of session evidence. No screenshots, usage totals or prizes are inferred from code changes.
