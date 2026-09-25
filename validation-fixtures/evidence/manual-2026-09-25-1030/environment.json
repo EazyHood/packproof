@@ -1,0 +1,9 @@
+{
+  "recordedAt": "2026-09-25T10:26:33.4190138-05:00",
+  "provenance": "Codex independent manual validation; not PackProof output or Bob evidence",
+  "node": "v24.16.0",
+  "npm": "11.13.0",
+  "platform": "Windows",
+  "sourceTestsExit": 0,
+  "network": "npm install uses --offline; npm commands use --ignore-scripts; no runtime dependencies"
+}

@@ -1,0 +1,16 @@
+{
+  "case": "fixed-wrong-expectation",
+  "fixture": "labels-fixed",
+  "contract": "label-wrong-expectation.mjs",
+  "expectedContractExit": 1,
+  "installExit": 0,
+  "contractExit": 1,
+  "observedAsExpected": true,
+  "archivePath": "C:\\Users\\jhona\\Documents\\Codex\\2026-09-09\\tengo\\packproof\\validation-fixtures\\evidence\\manual-2026-09-25-1030\\artifacts\\labels-fixed\\packproof-labels-1.0.0.tgz",
+  "archiveSHA256": "F42B3AE2F5A7DF413CDE2163750F7E9852FCEF0B90A55070E14535CD0E2573E9",
+  "contractSHA256": "29C2DC74B5DF56BBCC13E68C6514FACD48B2D3D23A1E1F71B0A42C27F4B8F45B",
+  "installedPath": "C:\\Users\\jhona\\Documents\\Codex\\2026-09-09\\tengo\\packproof\\validation-fixtures\\evidence\\manual-2026-09-25-1030\\consumers\\fixed-wrong-expectation\\node_modules\\@packproof\\labels",
+  "installedLinkType": null,
+  "resolvedEntry": "file:///C:/Users/jhona/Documents/Codex/2026-09-09/tengo/packproof/validation-fixtures/evidence/manual-2026-09-25-1030/consumers/fixed-wrong-expectation/node_modules/@packproof/labels/src/index.mjs",
+  "recordedAt": "2026-09-25T10:27:27.4684969-05:00"
+}

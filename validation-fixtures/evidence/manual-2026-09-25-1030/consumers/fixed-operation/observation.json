@@ -1,0 +1,16 @@
+{
+  "case": "fixed-operation",
+  "fixture": "labels-fixed",
+  "contract": "label-operation.mjs",
+  "expectedContractExit": 0,
+  "installExit": 0,
+  "contractExit": 0,
+  "observedAsExpected": true,
+  "archivePath": "C:\\Users\\jhona\\Documents\\Codex\\2026-09-09\\tengo\\packproof\\validation-fixtures\\evidence\\manual-2026-09-25-1030\\artifacts\\labels-fixed\\packproof-labels-1.0.0.tgz",
+  "archiveSHA256": "F42B3AE2F5A7DF413CDE2163750F7E9852FCEF0B90A55070E14535CD0E2573E9",
+  "contractSHA256": "1E78897D169224B61360CE8AF8C43ED3D35C314094AD8F1683500B17DB086C3B",
+  "installedPath": "C:\\Users\\jhona\\Documents\\Codex\\2026-09-09\\tengo\\packproof\\validation-fixtures\\evidence\\manual-2026-09-25-1030\\consumers\\fixed-operation\\node_modules\\@packproof\\labels",
+  "installedLinkType": null,
+  "resolvedEntry": "file:///C:/Users/jhona/Documents/Codex/2026-09-09/tengo/packproof/validation-fixtures/evidence/manual-2026-09-25-1030/consumers/fixed-operation/node_modules/@packproof/labels/src/index.mjs",
+  "recordedAt": "2026-09-25T10:27:26.4204351-05:00"
+}

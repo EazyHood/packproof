@@ -1,0 +1,22 @@
+[
+  {
+    "contract": "label-import-only.mjs",
+    "bytes": 310,
+    "sha256": "9045C8FE895C222F3ADE193DDFCEB811DC4884941B7AF8FA33B85256EE4E7381"
+  },
+  {
+    "contract": "label-operation.mjs",
+    "bytes": 292,
+    "sha256": "1E78897D169224B61360CE8AF8C43ED3D35C314094AD8F1683500B17DB086C3B"
+  },
+  {
+    "contract": "label-wrong-expectation.mjs",
+    "bytes": 366,
+    "sha256": "29C2DC74B5DF56BBCC13E68C6514FACD48B2D3D23A1E1F71B0A42C27F4B8F45B"
+  },
+  {
+    "contract": "tally-operation.mjs",
+    "bytes": 326,
+    "sha256": "A89B4725BE981ECBB8F69D368E28E73DF61567ECF3F4FEA334066ADB4BA5B181"
+  }
+]

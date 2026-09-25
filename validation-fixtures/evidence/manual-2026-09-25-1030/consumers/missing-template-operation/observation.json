@@ -1,0 +1,16 @@
+{
+  "case": "missing-template-operation",
+  "fixture": "labels-missing-template",
+  "contract": "label-operation.mjs",
+  "expectedContractExit": 1,
+  "installExit": 0,
+  "contractExit": 1,
+  "observedAsExpected": true,
+  "archivePath": "C:\\Users\\jhona\\Documents\\Codex\\2026-09-09\\tengo\\packproof\\validation-fixtures\\evidence\\manual-2026-09-25-1030\\artifacts\\labels-missing-template\\packproof-labels-1.0.0.tgz",
+  "archiveSHA256": "84A58EB0D406617F1BEB64EAED31CFEBB4B821BDE56B14B59E60617862790FEC",
+  "contractSHA256": "1E78897D169224B61360CE8AF8C43ED3D35C314094AD8F1683500B17DB086C3B",
+  "installedPath": "C:\\Users\\jhona\\Documents\\Codex\\2026-09-09\\tengo\\packproof\\validation-fixtures\\evidence\\manual-2026-09-25-1030\\consumers\\missing-template-operation\\node_modules\\@packproof\\labels",
+  "installedLinkType": null,
+  "resolvedEntry": "file:///C:/Users/jhona/Documents/Codex/2026-09-09/tengo/packproof/validation-fixtures/evidence/manual-2026-09-25-1030/consumers/missing-template-operation/node_modules/@packproof/labels/src/index.mjs",
+  "recordedAt": "2026-09-25T10:27:24.8623497-05:00"
+}

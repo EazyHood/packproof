@@ -1,0 +1,1 @@
+{"contract":"label-import-only-v1","operationExercised":false}

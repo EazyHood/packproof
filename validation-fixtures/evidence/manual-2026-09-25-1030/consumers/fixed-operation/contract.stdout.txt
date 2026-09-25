@@ -1,0 +1,1 @@
+{"contract":"label-operation-v1","actual":"SKU-042 | QTY 12 | BIN B-7\n"}

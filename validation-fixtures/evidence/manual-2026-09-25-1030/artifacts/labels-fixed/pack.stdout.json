@@ -1,0 +1,36 @@
+[
+  {
+    "id": "@packproof/labels@1.0.0",
+    "name": "@packproof/labels",
+    "version": "1.0.0",
+    "size": 1395,
+    "unpackedSize": 2206,
+    "shasum": "1dd9a778dde69f14e849f1ff57ec117d5ff4417a",
+    "integrity": "sha512-Npi1wJDGaiYowA0Ci4/SVWhAatx98ocbjh3kK1u9OriqRkXWfe4G/Xp09NJQr/f0T6UIQ1tITeN2Zc55zf6mEw==",
+    "filename": "packproof-labels-1.0.0.tgz",
+    "files": [
+      {
+        "path": "LICENSE",
+        "size": 1079,
+        "mode": 420
+      },
+      {
+        "path": "package.json",
+        "size": 264,
+        "mode": 420
+      },
+      {
+        "path": "src/index.mjs",
+        "size": 822,
+        "mode": 420
+      },
+      {
+        "path": "src/templates/label.txt",
+        "size": 41,
+        "mode": 420
+      }
+    ],
+    "entryCount": 4,
+    "bundled": []
+  }
+]

@@ -1,0 +1,26 @@
+[
+  {
+    "fixture": "labels-broken-export",
+    "relativeArchivePath": "artifacts/labels-broken-export/packproof-labels-1.0.0.tgz",
+    "bytes": 1404,
+    "sha256": "516020DCC01AE55D44AD4ED67F0494C72D31180FD21C00592CA64B5896CD58D9"
+  },
+  {
+    "fixture": "labels-fixed",
+    "relativeArchivePath": "artifacts/labels-fixed/packproof-labels-1.0.0.tgz",
+    "bytes": 1395,
+    "sha256": "F42B3AE2F5A7DF413CDE2163750F7E9852FCEF0B90A55070E14535CD0E2573E9"
+  },
+  {
+    "fixture": "labels-missing-template",
+    "relativeArchivePath": "artifacts/labels-missing-template/packproof-labels-1.0.0.tgz",
+    "bytes": 1347,
+    "sha256": "84A58EB0D406617F1BEB64EAED31CFEBB4B821BDE56B14B59E60617862790FEC"
+  },
+  {
+    "fixture": "tally",
+    "relativeArchivePath": "artifacts/tally/packproof-tally-1.0.0.tgz",
+    "bytes": 1367,
+    "sha256": "79CBD43CBBBCD751D0F168EA6E0DE29DDADF89D60594FB7A96CEDB17F1E80348"
+  }
+]

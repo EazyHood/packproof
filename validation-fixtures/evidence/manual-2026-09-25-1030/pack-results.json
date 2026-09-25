@@ -1,0 +1,18 @@
+[
+  {
+    "fixture": "labels-missing-template",
+    "packExit": 0
+  },
+  {
+    "fixture": "labels-fixed",
+    "packExit": 0
+  },
+  {
+    "fixture": "labels-broken-export",
+    "packExit": 0
+  },
+  {
+    "fixture": "tally",
+    "packExit": 0
+  }
+]

@@ -1,0 +1,18 @@
+node:fs:441
+    return binding.readFileUtf8(path, stringToFlags(options.flag));
+                   ^
+
+Error: ENOENT: no such file or directory, open 'C:\Users\jhona\Documents\Codex\2026-09-09\tengo\packproof\validation-fixtures\evidence\manual-2026-09-25-1030\consumers\missing-template-operation\node_modules\@packproof\labels\src\templates\label.txt'
+    at readFileSync (node:fs:441:20)
+    at formatLabel (file:///C:/Users/jhona/Documents/Codex/2026-09-09/tengo/packproof/validation-fixtures/evidence/manual-2026-09-25-1030/consumers/missing-template-operation/node_modules/@packproof/labels/src/index.mjs:14:20)
+    at file:///C:/Users/jhona/Documents/Codex/2026-09-09/tengo/packproof/validation-fixtures/evidence/manual-2026-09-25-1030/consumers/missing-template-operation/contract.mjs:4:16
+    at ModuleJob.run (node:internal/modules/esm/module_job:439:25)
+    at async node:internal/modules/esm/loader:633:26
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5) {
+  errno: -4058,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: 'C:\\Users\\jhona\\Documents\\Codex\\2026-09-09\\tengo\\packproof\\validation-fixtures\\evidence\\manual-2026-09-25-1030\\consumers\\missing-template-operation\\node_modules\\@packproof\\labels\\src\\templates\\label.txt'
+}
+
+Node.js v24.16.0

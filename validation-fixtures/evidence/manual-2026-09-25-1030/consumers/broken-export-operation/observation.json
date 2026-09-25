@@ -1,0 +1,16 @@
+{
+  "case": "broken-export-operation",
+  "fixture": "labels-broken-export",
+  "contract": "label-operation.mjs",
+  "expectedContractExit": 1,
+  "installExit": 0,
+  "contractExit": 1,
+  "observedAsExpected": true,
+  "archivePath": "C:\\Users\\jhona\\Documents\\Codex\\2026-09-09\\tengo\\packproof\\validation-fixtures\\evidence\\manual-2026-09-25-1030\\artifacts\\labels-broken-export\\packproof-labels-1.0.0.tgz",
+  "archiveSHA256": "516020DCC01AE55D44AD4ED67F0494C72D31180FD21C00592CA64B5896CD58D9",
+  "contractSHA256": "1E78897D169224B61360CE8AF8C43ED3D35C314094AD8F1683500B17DB086C3B",
+  "installedPath": "C:\\Users\\jhona\\Documents\\Codex\\2026-09-09\\tengo\\packproof\\validation-fixtures\\evidence\\manual-2026-09-25-1030\\consumers\\broken-export-operation\\node_modules\\@packproof\\labels",
+  "installedLinkType": null,
+  "resolvedEntry": "file:///C:/Users/jhona/Documents/Codex/2026-09-09/tengo/packproof/validation-fixtures/evidence/manual-2026-09-25-1030/consumers/broken-export-operation/node_modules/@packproof/labels/dist/not-here.mjs",
+  "recordedAt": "2026-09-25T10:27:28.2931919-05:00"
+}

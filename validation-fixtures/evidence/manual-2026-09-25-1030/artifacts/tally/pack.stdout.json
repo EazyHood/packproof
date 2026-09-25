@@ -1,0 +1,36 @@
+[
+  {
+    "id": "@packproof/tally@1.0.0",
+    "name": "@packproof/tally",
+    "version": "1.0.0",
+    "size": 1367,
+    "unpackedSize": 2146,
+    "shasum": "534e811acf5ac9ae5944b4f2f557b4cf4dbc1d01",
+    "integrity": "sha512-tLhbg9wPvb2w13em1sXpcTZz4cJOhQeswA3AHuHzeYnt7p72cnsvMNsnupRTzai7NT31ii6eAMnnJP3iiSyR/A==",
+    "filename": "packproof-tally-1.0.0.tgz",
+    "files": [
+      {
+        "path": "LICENSE",
+        "size": 1079,
+        "mode": 420
+      },
+      {
+        "path": "data/units.json",
+        "size": 30,
+        "mode": 420
+      },
+      {
+        "path": "lib/summary.cjs",
+        "size": 792,
+        "mode": 420
+      },
+      {
+        "path": "package.json",
+        "size": 245,
+        "mode": 420
+      }
+    ],
+    "entryCount": 4,
+    "bundled": []
+  }
+]

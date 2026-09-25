@@ -1,0 +1,3 @@
+# Keep raw logs, observations and exact tarballs; exclude npm's disposable cache.
+evidence/*/npm-cache/
+evidence/*/consumers/*/node_modules/

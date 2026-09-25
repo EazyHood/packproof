@@ -1,0 +1,5 @@
+# The frozen label expectation includes exactly one LF, on every host.
+*.mjs text eol=lf
+*.cjs text eol=lf
+*/src/templates/label.txt text eol=lf
+*.tgz binary
