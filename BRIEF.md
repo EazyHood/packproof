@@ -29,7 +29,7 @@ Use isolated disposable run directories under the project. Never delete user fil
 
 ## Responsibility and provenance
 
-An independent Codex validation task is creating original fixture packages and fixed consumer contracts under `validation-fixtures/`. Inspect and reuse those reference cases where appropriate instead of overwriting their expected values to satisfy the runner. They are support material, not an implementation of PackProof. The public provenance must credit them separately.
+An independent Codex validation task created original fixture packages and fixed consumer contracts under `validation-fixtures/` and ran a manual baseline. Inspect and reuse those reference cases where appropriate instead of overwriting their expected values to satisfy the runner. They are support material, not an implementation of PackProof. The public provenance must credit them separately. Git attributes preserve LF template bytes across Windows and Linux checkouts because exact expected output includes a newline.
 
 Bob IDE must perform substantive design and core implementation, then diagnose/repair and review regressions. Codex coordinates, prepares this brief, runs independent shell verification through its own execution tools, reviews, builds presentation assets and handles the final submission. Do not pretend all work was done by a human or by Bob alone.
 
