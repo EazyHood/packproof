@@ -37,7 +37,8 @@ export function buildReport(input) {
     runId: input.runId,
     recordedAt: input.recordedAt ?? new Date().toISOString(),
     caseName: input.caseName,
-    provenance: 'PackProof runner (IBM Bob IDE implementation); fixture packages by Codex',
+    provenance: 'Core implementation and tasks 01–03 by IBM Bob IDE; fixtures, independent review and final evidence corrections by Codex',
+    commands: input.commands ?? null,
     environment: {
       node: input.nodeVersion,
       npm: input.npmVersion,
@@ -57,6 +58,7 @@ export function buildReport(input) {
       packError: input.packError ?? '',
       packStdout: input.packStdout,
       packStderr: input.packStderr,
+      elapsedMs: input.packElapsedMs ?? null,
     },
     consumer: {
       consumerDir: input.consumerDir,
@@ -70,6 +72,7 @@ export function buildReport(input) {
       installError: input.installError ?? '',
       installStdout: input.installStdout,
       installStderr: input.installStderr,
+      elapsedMs: input.installElapsedMs ?? null,
     },
     verify: input.verify ?? null,
     contract: {

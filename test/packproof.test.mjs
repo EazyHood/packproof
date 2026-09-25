@@ -781,10 +781,12 @@ test('verify: ancestor node_modules detection', async () => {
 
     const consumer = join(tmp, 'consumer-dir');
     mkdirSync(consumer);
+    const fixtureElsewhere = join(tmp, 'fixture-elsewhere');
+    mkdirSync(fixtureElsewhere);
 
     const result = verifyRun({
       consumerDir: consumer,
-      fixtureDir: join(tmpdir(), 'fixture-elsewhere'),
+      fixtureDir: fixtureElsewhere,
       installedPkgDir: null,
       installedPkgName: null,
       expectedPackageName: null,

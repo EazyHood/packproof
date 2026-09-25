@@ -5,19 +5,16 @@
  * The fix is to locate npm-cli.js and run it with `process.execPath` directly.
  *
  * Discovery order:
- *   1. NPM_EXECPATH env var (npm sets this when it shells out to scripts).
+ *   1. NPM_EXECPATH override or npm_execpath provided by npm.
  *   2. npm-cli.js adjacent to the node executable (the standard layout).
- *   3. npm_execpath env var (lowercase variant some versions set).
- *   4. On POSIX, try `npm` via PATH using spawnSync with a probe timeout —
- *      but only when it is confirmed to work (exit 0 for --version).
+ *   3. Standard lib/node_modules layouts relative to the Node executable.
  *
- * If none work, spawnNpm() returns a result with status:1 and an actionable
- * error.code/message so the caller can surface INCONCLUSIVE with context.
+ * If none work, spawnNpm() returns status:null and an actionable message.
  *
  * Limitations (documented):
  * - `process.execPath` is used as the Node.js interpreter; it must be the same
  *   binary that can require npm-cli.js (Node.js ≥ 24 is assumed).
- * - Descendant process trees are not killed — SIGTERM is sent to the direct
+ * - Descendant process trees are not contained — SIGKILL is sent to the direct
  *   child.  Deeply nested hanging scripts may outlive the timeout on some hosts.
  */
 
@@ -124,13 +121,14 @@ export function spawnNpm(args, opts = {}) {
       encoding: 'utf8',
       shell: false,
       timeout: timeoutMs,
-      killSignal: 'SIGTERM',
+      killSignal: 'SIGKILL',
+      windowsHide: true,
       env,
     }
   );
 
   // Distinguish timeout from other errors
-  const timedOut = result.signal === 'SIGTERM' && result.error?.code === 'ETIMEDOUT';
+  const timedOut = result.error?.code === 'ETIMEDOUT';
   const errorMsg = result.error ? result.error.message : '';
 
   return {

@@ -106,7 +106,7 @@ export function classify({
   }
 
   // 6. Spawn error (process could not start or had an infrastructure error)
-  if (contractError && contractExit === null) {
+  if (contractError) {
     return {
       outcome: Outcome.INCONCLUSIVE,
       reason: `Contract process could not start or had an infrastructure error: ${contractError}`,
@@ -114,7 +114,7 @@ export function classify({
   }
 
   // 7. Signal from a cause other than our timeout (e.g. OOM kill, external SIGKILL)
-  if (contractSignal && contractExit === null) {
+  if (contractSignal) {
     return {
       outcome: Outcome.INCONCLUSIVE,
       reason: `Contract terminated by signal ${contractSignal}`,
@@ -122,7 +122,7 @@ export function classify({
   }
 
   // 8. Unknown completion (null exit without any of the above — do not treat as pass)
-  if (contractExit === null) {
+  if (!Number.isInteger(contractExit) || contractExit < 0) {
     return {
       outcome: Outcome.INCONCLUSIVE,
       reason: 'Contract exit code unknown (null); completion unverified',

@@ -21,7 +21,8 @@
  */
 
 import { parseArgs } from 'node:util';
-import { existsSync, mkdirSync } from 'node:fs';
+import { existsSync, mkdirSync, writeFileSync } from 'node:fs';
+import { randomUUID } from 'node:crypto';
 import { resolve, join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { runCase } from './runner.mjs';
@@ -273,6 +274,7 @@ function runDemo(values, timeoutMs) {
       outcome: result.outcome,
       expectedOutcome: c.expectedOutcome,
       observedAsExpected,
+      reportPath: result.reportPath,
       sourceBaseline: summary.length === 0 ? result.report.sourceBaseline : null,
     });
   }
@@ -286,7 +288,7 @@ function runDemo(values, timeoutMs) {
   }
 
   // Print source baseline status (recorded once with the first case)
-  const baselineEntry = summary.find((s) => s.sourceBaseline !== null);
+  const baselineEntry = summary.find((s) => s.sourceBaseline);
   if (baselineEntry?.sourceBaseline) {
     const sb = baselineEntry.sourceBaseline;
     const sbMarker = sb.status === 'pass' ? '✓' : (sb.status === 'not-run' ? '-' : '✗');
@@ -296,12 +298,22 @@ function runDemo(values, timeoutMs) {
       (sb.durationMs != null ? ` ${sb.durationMs}ms` : '') +
       '\n'
     );
-    if (sb.status !== 'pass' && sb.status !== 'not-run') {
+    if (sb.status !== 'pass') {
       process.stdout.write(`    ${sb.reason || ''}\n`);
       exitCode = 1;
     }
+  } else {
+    exitCode = 1;
+    process.stdout.write('\n  Source baseline: MISSING — demonstration is not validated.\n');
   }
   process.stdout.write('\n');
+  const summaryPath = join(baseOutDir, `demo-summary-${randomUUID()}.json`);
+  writeFileSync(summaryPath, JSON.stringify({ schema: 'packproof-demo-v1',
+    recordedAt: new Date().toISOString(), cases: summary,
+    sourceBaseline: baselineEntry?.sourceBaseline ?? { status: 'not-run' },
+    validated: exitCode === 0,
+  }, null, 2) + '\n');
+  process.stdout.write(`Demo summary: ${summaryPath}\n`);
 
   if (exitCode !== 0) {
     process.stdout.write(

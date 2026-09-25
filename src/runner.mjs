@@ -138,6 +138,7 @@ export function runCase(options) {
       tarballPath: packResult.tarballPath,
       contractPath: contractFile,
       cacheDir,
+      expectedPackageName: packResult.packageName,
     });
   }
 
@@ -146,18 +147,21 @@ export function runCase(options) {
     !installResult.installError;
 
   // ── Step 3: Verify prerequisites ─────────────────────────────────────────────
+  const verificationInput = {
+    consumerDir: installResult.consumerDir,
+    fixtureDir,
+    installedPkgDir: installResult.installedPkgDir,
+    installedPkgName: installResult.installedPkgName,
+    expectedPackageName: packResult.packageName,
+    installedIsSymlink: installResult.installedIsSymlink,
+    contractCopiedPath: installResult.contractCopiedPath,
+    contractCopiedSHA256: installResult.contractCopiedSHA256,
+    tarballPath: packResult.tarballPath,
+    archiveSHA256: packResult.archiveSHA256,
+  };
   let verifyResult = null;
   if (installSucceeded) {
-    verifyResult = verifyRun({
-      consumerDir: installResult.consumerDir,
-      fixtureDir,
-      installedPkgDir: installResult.installedPkgDir,
-      installedPkgName: installResult.installedPkgName,
-      expectedPackageName: packResult.packageName,
-      installedIsSymlink: installResult.installedIsSymlink,
-      contractCopiedPath: installResult.contractCopiedPath,
-      contractCopiedSHA256: installResult.contractCopiedSHA256,
-    });
+    verifyResult = verifyRun(verificationInput);
   }
 
   // Required prerequisites: if any fail, skip contract execution
@@ -189,12 +193,10 @@ export function runCase(options) {
   // Re-run contractHash verification after execution; pass updated result to report.
   let verifyAfter = null;
   if (verifyResult !== null) {
-    // Re-verify contractHash (other checks are not repeated — they check static state)
-    const postHashCheck = recheckContractHash({
-      contractCopiedPath: installResult.contractCopiedPath,
-      contractCopiedSHA256: installResult.contractCopiedSHA256,
-    });
-    verifyAfter = { ...verifyResult, contractHashAfter: postHashCheck };
+    // Trusted code can still change files accidentally. Recheck the complete
+    // evidence set, and keep both observations instead of assuming static state.
+    const after = verifyRun(verificationInput);
+    verifyAfter = { ...after, before: verifyResult, contractHashAfter: after.contractHash };
   }
 
   // ── Step 6: Classify ──────────────────────────────────────────────────────────
@@ -206,10 +208,12 @@ export function runCase(options) {
   // Prerequisite failures (isolation, identity, contractHash) block PASS
   const prereqFailure = verifyResult !== null && !verifyResult.allRequired
     ? verifyResult.failureReason
-    : null;
+    : verifyAfter !== null && !verifyAfter.allRequired
+      ? `Post-execution verification: ${verifyAfter.failureReason}`
+      : null;
 
   // Changed contract after execution — also blocks PASS
-  const contractHashChanged = verifyAfter?.contractHashAfter?.status === 'fail'
+  const contractHashChanged = verifyAfter && verifyAfter.contractHashAfter.status !== 'pass'
     ? verifyAfter.contractHashAfter.reason
     : null;
 
@@ -251,7 +255,7 @@ export function runCase(options) {
     nodeVersion: packResult.nodeVersion,
     npmCliJs: packResult.npmCliJs,
     consumerDir: installResult.consumerDir,
-    isolationPreconditionMet: installResult.isolationPreconditionMet,
+    isolationPreconditionMet: (verifyAfter ?? verifyResult)?.isolation.status === 'pass',
     installedPkgDir: installResult.installedPkgDir,
     installedPkgName: installResult.installedPkgName,
     installedIsSymlink: installResult.installedIsSymlink,
@@ -261,6 +265,8 @@ export function runCase(options) {
     installError: installResult.installError,
     installStdout: installResult.installStdout,
     installStderr: installResult.installStderr,
+    installElapsedMs: installResult.installElapsedMs,
+    packElapsedMs: packResult.packElapsedMs,
     verify: verifyAfter ?? verifyResult,
     contractExit: contractResult.exitCode,
     contractSignal: contractResult.signal,
@@ -274,6 +280,11 @@ export function runCase(options) {
     outcomeReason: reason,
     recordedAt,
     sourceBaseline,
+    commands: {
+      pack: [process.execPath, packResult.npmCliJs, 'pack', '--ignore-scripts', '--json', '--pack-destination', archiveDir],
+      install: installResult.installCommand ?? null,
+      contract: contractResult.command ?? null,
+    },
   };
 
   const report = buildReport(reportInput);
@@ -287,32 +298,6 @@ export function runCase(options) {
 // ---------------------------------------------------------------------------
 // Internal helpers
 // ---------------------------------------------------------------------------
-
-/**
- * Re-check the contract hash post-execution.
- * Returns a CheckResult-shaped object.
- */
-function recheckContractHash({ contractCopiedPath, contractCopiedSHA256 }) {
-  if (!contractCopiedPath || contractCopiedSHA256 === null) {
-    return { status: 'skipped', reason: 'Pre-execution hash not available; cannot compare after' };
-  }
-  if (!existsSync(contractCopiedPath)) {
-    return { status: 'fail', reason: `Contract copy no longer exists after execution: ${contractCopiedPath}` };
-  }
-  let hashAfter;
-  try {
-    hashAfter = sha256File(contractCopiedPath);
-  } catch (e) {
-    return { status: 'error', reason: `Cannot hash contract after execution: ${e.message}` };
-  }
-  if (hashAfter !== contractCopiedSHA256) {
-    return {
-      status: 'fail',
-      reason: `Contract bytes changed during execution: before=${contractCopiedSHA256} after=${hashAfter}`,
-    };
-  }
-  return { status: 'pass', reason: `Contract bytes unchanged after execution: ${contractCopiedSHA256}` };
-}
 
 /**
  * Execute the frozen source-tests.test.mjs baseline and return a record.
@@ -355,6 +340,7 @@ function runSourceBaselineCheck(boundMs = SOURCE_BASELINE_TIMEOUT_MS) {
 
   let status;
   if (timedOut) status = 'timeout';
+  else if (r.error || r.signal || !scriptHash) status = 'error';
   else if (exit === 0) status = 'pass';
   else status = 'fail';
 
@@ -368,6 +354,8 @@ function runSourceBaselineCheck(boundMs = SOURCE_BASELINE_TIMEOUT_MS) {
     stderr: r.stderr || '',
     durationMs,
     timedOut,
+    signal: r.signal ?? null,
+    error: r.error?.message ?? (!scriptHash ? 'Script hash unavailable' : null),
     recordedAt: new Date().toISOString(),
   };
 }

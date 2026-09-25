@@ -7,12 +7,10 @@
  * Kill signal: SIGKILL is used instead of SIGTERM.  SIGTERM is catchable by
  * the child process and may not terminate it on POSIX systems.  SIGKILL cannot
  * be caught or ignored, and spawnSync enforces the wall-clock limit before
- * returning.  On Windows, spawnSync ignores killSignal and forcibly terminates
- * the process tree; SIGKILL is accepted as a valid value on all platforms.
+ * returning for the direct child. Descendant process cleanup is not guaranteed.
  *
  * Limitations (documented):
- * - Descendant processes spawned by the contract are not explicitly killed on
- *   POSIX.  On Windows, Job Object containment typically terminates children.
+ * - Descendant processes are not explicitly supervised on any platform.
  * - This is not a security sandbox; it is an isolated execution of trusted
  *   local fixture contracts.
  * - Only Windows behaviour has been verified by Codex; Linux behaviour is not
@@ -71,6 +69,7 @@ export function runContract({ consumerDir, timeoutMs = DEFAULT_TIMEOUT_MS }) {
       timeout: timeoutMs,
       killSignal: 'SIGKILL',  // uncatchable; replaces SIGTERM for hard termination
       shell: false,
+      windowsHide: true,
       env: {
         ...process.env,
         // Prevent accidental global module resolution via NODE_PATH
@@ -98,6 +97,8 @@ export function runContract({ consumerDir, timeoutMs = DEFAULT_TIMEOUT_MS }) {
     timedOut,
     signal,
     error: errorMsg,
+    errorCode: result.error?.code ?? null,
+    command: [process.execPath, './contract.mjs'],
     elapsedMs,
   };
 }

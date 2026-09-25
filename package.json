@@ -8,8 +8,8 @@
     "packproof": "./src/cli.mjs"
   },
   "scripts": {
-    "test": "node --test --test-reporter=tap ./test/packproof.test.mjs",
-    "test:verbose": "node --test --test-reporter=spec ./test/packproof.test.mjs"
+    "test": "node --test --test-reporter=tap ./test/*.test.mjs",
+    "test:verbose": "node --test --test-reporter=spec ./test/*.test.mjs"
   },
   "engines": {
     "node": ">=24"

@@ -1,229 +1,58 @@
 # PackProof
 
-Turn a package archive and an explicit consumer contract into a reproducible
-observation with recorded errors and an archive hash.
+**Source tests passed. Does the archive still do the job?**
 
-PackProof packs a fixture source directory with `npm pack`, installs the
-resulting tarball into an isolated consumer in the OS temp directory, executes a
-consumer contract script, and writes a versioned JSON report.  Every intermediate
-fact — archive SHA-256, contract SHA-256, install stdout/stderr, contract
-stdout/stderr, exit codes, verification status — is preserved in the report.
-Nothing is invented.
+PackProof packages a trusted local npm fixture, installs its exact tarball in a fresh consumer, and executes an explicit consumer contract. It preserves the archive hash, file list, installed-byte comparison, contract hashes, outputs and verification results in a JSON report.
 
-**Outcome vocabulary:**
+The demo uses a small label library whose source can read a template that the broken archive omits. The same consumer expectation fails after install, then passes when the template is included. Importing alone misses this defect. A separate CommonJS package and deliberate negative controls keep the demonstration honest.
 
-| Outcome | Meaning |
-|---|---|
-| **PASS** | Contract exited 0, all prerequisite checks passed, contract bytes unchanged |
-| **FAIL** | Contract exited non-zero without infrastructure error (e.g. assertion, ENOENT for the package file under test) |
-| **INCONCLUSIVE** | Any infrastructure or runner problem: pack failure, install failure, failed isolation/identity check, timeout, spawn error, changed contract bytes, unknown exit |
+## Run locally
 
-An intentionally failing contract (wrong assertion) is **FAIL**, not
-INCONCLUSIVE.  A timeout or isolation problem is never PASS.
-
-## Installation prerequisites
-
-- **Node.js ≥ 18** (ESM with `node:test` built-in)
-- **npm ≥ 8** — must be discoverable alongside the Node binary.  PackProof
-  finds `npm-cli.js` via `NPM_EXECPATH`, adjacent to the `node` executable, or
-  at the standard `lib/node_modules` location.  Set `NPM_EXECPATH` to the full
-  path of `npm-cli.js` to override discovery.
-- **No additional packages** are required at runtime — all dependencies are
-  Node.js built-ins.
-
-Install locally from the project root (after cloning):
-
-```sh
-npm install
-```
-
-No publication step is needed.  The `packproof` binary is registered in
-`package.json` and is runnable via `node src/cli.mjs` or `npx` locally.
-
-## Commands
-
-### Run the test suite
-
-```sh
-node --test --test-reporter=tap test/packproof.test.mjs
-```
-
-Or with the npm script:
+Requires **Node.js 24 or newer** and npm. Verified environment is Windows with Node 24.16.0 and npm 11.13.0; Linux is a portability target, not a verified platform. No dependency installation is required.
 
 ```sh
 npm test
+node src/cli.mjs --demo --out ./runs/demo
+node src/cli.mjs --fixture validation-fixtures/labels-fixed --contract validation-fixtures/contracts/label-operation.mjs --out ./runs/single
 ```
 
-Tests that require a working `npm-cli.js` (§9 runner path-traversal regressions,
-§10 end-to-end integration) are skipped automatically when npm is not found.
-All other tests run without npm.
+Run from the cloned repository. The fixtures are needed for `--demo` and are deliberately not included in the npm package file list. No npm publishing or `npx` download is necessary.
 
-### Run the six-case demo
+Set `NPM_EXECPATH` to a valid absolute npm-cli.js path if discovery alongside Node fails. The CLI executes npm through Node with argument arrays and no shell. Installing the archive uses `--offline --ignore-scripts`; fixture packages have no network dependencies. Contracts run in new OS temporary directories with NODE_PATH and NODE_OPTIONS cleared.
 
-The demo runs every validation-fixture case and checks that each observed outcome
-matches the expected outcome recorded in the README table below.
+## Read the result
 
-```sh
-node src/cli.mjs --demo
-```
+| Outcome | Meaning |
+|---|---|
+| PASS | The explicit contract exited zero and required evidence checks passed. |
+| FAIL | The contract completed with a nonzero exit, such as a real assertion or missing resource error. |
+| INCONCLUSIVE | The runner cannot support a conclusion: timeout, missing tool, isolation failure, changed evidence or another infrastructure problem. |
 
-Or with a custom output directory and timeout:
+An expected FAIL is a successful **control**, not a working package. The six demo cases are: missing-template operation FAIL; missing-template import-only PASS; repaired operation PASS; deliberately wrong assertion FAIL; broken export FAIL; separate tally operation PASS. Demo exit zero means this matrix matched **and** the frozen source baseline passed. It does not mean every package passed.
 
-```sh
-node src/cli.mjs --demo --out ./runs/my-demo --timeout 20000
-```
+PASS covers only what the supplied contract exercises. The import-only control intentionally demonstrates this limit.
 
-Artifacts are written to a timestamped `runs/demo-YYYY-MM-DD-HH-MM/` directory
-by default.
+## Evidence and verification
 
-### Run a single case
+Each invocation creates a unique `<out>/<UUID>/` containing `report.json` and `archive/*.tgz`. Repeated commands retain earlier evidence. Case labels are metadata and never file paths. Demo also writes a unique `demo-summary-<UUID>.json` linking the reports and actual source baseline.
 
-```sh
-node src/cli.mjs \
-  --fixture  validation-fixtures/labels-fixed \
-  --contract validation-fixtures/contracts/label-operation.mjs \
-  --out      ./runs/my-run \
-  --timeout  15000 \
-  --case     "my-label-check"
-```
+Reports preserve process outcomes separately from the overall result. Required verification checks include:
 
-All three of `--fixture`, `--contract`, and `--out` are required for single-case
-mode.  `--case` is a metadata label stored in the report only; it does not
-control any filesystem paths.
+- Consumer realpath outside the fixture source, no ancestor node_modules candidates, expected installed package identity and path containment.
+- Byte comparison of supported regular archive members against the installed files. Unsupported archive constructs are rejected instead of accepted as verified.
+- Hash of the copied consumer contract before and after execution. A missing, unreadable or changed copy invalidates the conclusion.
+- Verification after the operation as well as before it. A changed installed package cannot keep a PASS based on earlier bytes.
 
-## Expected demo outcomes
+The source baseline runs once per demo with actual command, script hash, output, exit and timing. Single-case mode labels it `not-run`. Archives, npm caches and consumers are left inspectable; their exact paths are in the reports. Cleanup is manual and must target only the specific generated directories.
 
-| Case | Fixture | Contract | Expected |
-|---|---|---|---|
-| missing-template-operation | labels-missing-template | label-operation.mjs | **FAIL** |
-| missing-template-import-only | labels-missing-template | label-import-only.mjs | **PASS** |
-| fixed-operation | labels-fixed | label-operation.mjs | **PASS** |
-| fixed-wrong-expectation | labels-fixed | label-wrong-expectation.mjs | **FAIL** |
-| broken-export-operation | labels-broken-export | label-operation.mjs | **FAIL** |
-| tally-operation | tally | tally-operation.mjs | **PASS** |
+## Limits
 
-`label-wrong-expectation.mjs` always fails even with the fixed package — a FAIL
-is the correct expected outcome, not a runner problem.  `label-import-only.mjs`
-passes because it does not invoke the resource-backed operation; it records
-`operationExercised: false`.
+This is **trusted local execution, not a security sandbox**. Contracts and installed modules can access the host. Disabling npm lifecycle scripts does not restrict the code invoked by the contract. Direct child processes have finite timeouts; descendant process containment is not guaranteed. Do not supply untrusted packages or contracts.
 
-## Output paths
+Archive comparison supports a deliberately bounded subset of local npm tarballs; unsupported links or formats yield INCONCLUSIVE. Matching hashes are integrity observations, not signatures or proof that an independent party produced a report. Reports and the viewer display saved executions; they do not run Node inside the browser.
 
-Each run creates a unique subdirectory under the artifact parent, named by a
-UUID.  Contents:
+The baseline comprises synthetic fixtures, not customer usage or a performance study. Existing tools such as publint detect metadata/export problems, and a manually installed consumer also detects the omitted template. PackProof's contribution is repeatable execution with organized evidence, not exclusive detection or measured productivity savings.
 
-```
-<artifactDir>/<uuid>/
-  report.json        ← versioned JSON report (schema: packproof-report-v1)
-  archive/
-    <package>.tgz    ← the archive produced by npm pack
-```
+## Provenance
 
-The consumer directory is allocated in the OS temp directory (`os.tmpdir()`) and
-is not cleaned up by PackProof — it is left on disk for inspection.  The path is
-recorded in `report.json` under `consumer.consumerDir`.
-
-To inspect a run:
-
-```sh
-# Read the report
-cat <artifactDir>/<uuid>/report.json
-
-# Check contract stdout/stderr
-node -e "const r=JSON.parse(require('fs').readFileSync('<uuid>/report.json'));console.log(r.contract.stdout)"
-```
-
-## Inspectable temporary data
-
-The following are left on disk after a run:
-
-- `<artifactDir>/<uuid>/archive/*.tgz` — the packed archive
-- `<os.tmpdir()>/packproof-consumer-<rand>/` — the installed consumer
-  - `contract.mjs` — the exact contract bytes that were executed (hashed before execution)
-  - `node_modules/<package>/` — the installed package
-- `<os.tmpdir()>/packproof-cache-<uuid>/` — private npm cache for this run
-
-None of these are cleaned up automatically.  They are safe to delete after
-inspection.
-
-## Trusted-fixture-only scope
-
-PackProof is designed for **trusted local fixtures only**.  It does not:
-
-- sandbox the contract or package in any way
-- prevent a contract from reading or writing files outside its directory
-- prevent a package lifecycle script from running (install is `--ignore-scripts`)
-- validate that installed bytes match the tarball byte-for-byte (package.json
-  presence is verified; full extraction comparison is not performed)
-- kill descendant processes spawned by the contract (only the direct child
-  `node` process is killed on timeout)
-
-Do not point PackProof at untrusted fixtures or contracts.
-
-## Verification checks recorded in the report
-
-Each run records explicit verification results in `report.verify`:
-
-| Check | Required | Failure → |
-|---|---|---|
-| `isolation` | Yes | INCONCLUSIVE |
-| `identity` | Yes | INCONCLUSIVE |
-| `contractHash` | Yes | INCONCLUSIVE |
-| `installedBytes` | No | Recorded, not blocking |
-
-- **isolation** — consumer realpath is outside the fixture source directory; no
-  ancestor `node_modules` directory is present between OS root and consumer; the
-  installed package entry is not a symlink.
-- **identity** — the package installed under `node_modules` has the name that
-  `npm pack` reported.
-- **contractHash** — the contract file bytes are hashed before execution and
-  re-checked after; a changed file yields INCONCLUSIVE.
-- **installedBytes** — `package.json` is present and parseable in the installed
-  package directory (full tarball byte-comparison is not performed; this is
-  explicitly recorded as `unverified` in the reason string).
-
-## Platform limitations
-
-Tested on **Windows (Node v24 / npm 11)** and targeted at POSIX as well.
-
-Known limitations:
-
-- **Descendant processes are not killed on timeout.** Only the direct `node`
-  contract process receives SIGKILL (Windows: forcible termination).  Child
-  processes spawned by the contract continue running.
-- **npm discovery may fail** if npm is installed in an unusual location.  Set
-  `NPM_EXECPATH` to the absolute path of `npm-cli.js` to override.
-- **Full archive integrity is not verified.** PackProof does not unpack and
-  compare every tarball entry to the installed files.  The presence and
-  parseability of the installed `package.json` is checked; further byte-level
-  comparison is deferred.
-- **Case-insensitive filesystem handling is partial.** Isolation checks
-  normalise paths with `toLowerCase()` for containment comparison on Windows.
-  Unusual filesystem configurations may require manual inspection.
-- **Source baseline runs once per demo.** The baseline is attached to the first
-  demo case report only.  In single-case mode without `--source-baseline`, the
-  field is `{ status: "not-run" }`.
-
-## Validation commands (for Codex)
-
-Run from the project root:
-
-```sh
-# Unit and integration tests (skip npm-dependent tests when npm not found)
-node --test --test-reporter=tap test/packproof.test.mjs
-
-# Full demo (requires npm)
-node src/cli.mjs --demo
-
-# Single case smoke test (requires npm)
-node src/cli.mjs \
-  --fixture  validation-fixtures/labels-fixed \
-  --contract validation-fixtures/contracts/label-operation.mjs \
-  --out      ./runs/smoke \
-  --case     smoke-fixed-operation
-
-# Source tests only (Codex fixture tests, independent of PackProof runner)
-node --test --test-reporter=tap validation-fixtures/source-tests.test.mjs
-```
-
-Exit 0 means all checked cases matched their expected outcome.
+IBM Bob IDE implemented the CLI and report pipeline through tasks 01–03. Codex specified independent fixtures, executed baselines, reviewed the implementation, corrected remaining evidence edge cases and prepared presentation assets. See PROVENANCE.md and bob_sessions/README.md for the actual state of session evidence. No screenshots, usage totals or prizes are inferred from code changes.

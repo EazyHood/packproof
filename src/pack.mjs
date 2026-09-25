@@ -10,7 +10,7 @@
  */
 
 import { existsSync, mkdirSync } from 'node:fs';
-import { join, resolve } from 'node:path';
+import { join, resolve, basename } from 'node:path';
 import { sha256File } from './hash.mjs';
 import { spawnNpm, getNpmVersion } from './npm-runner.mjs';
 
@@ -58,6 +58,7 @@ export function packFixture({ fixtureDir, destDir, timeoutMs = DEFAULT_PACK_TIME
 
   const npmVersion = getNpmVersion();
 
+  const packStarted = Date.now();
   const npmResult = spawnNpm(
     ['pack', '--ignore-scripts', '--json', '--pack-destination', destDir],
     {
@@ -65,8 +66,8 @@ export function packFixture({ fixtureDir, destDir, timeoutMs = DEFAULT_PACK_TIME
       timeoutMs,
       env: {
         NPM_CONFIG_UPDATE_NOTIFIER: 'false',
-        // Do not pass --offline here; pack reads the local package.json only.
-        NPM_CONFIG_OFFLINE: 'false',
+        NPM_CONFIG_OFFLINE: 'true',
+        NODE_PATH: '', NODE_OPTIONS: '',
       },
     }
   );
@@ -77,6 +78,7 @@ export function packFixture({ fixtureDir, destDir, timeoutMs = DEFAULT_PACK_TIME
   const packSignal = npmResult.signal || '';
   const packTimedOut = npmResult.timedOut;
   const packError = npmResult.error || '';
+  const packElapsedMs = Date.now() - packStarted;
 
   const normalExit = packExit === 0 && !packTimedOut && !packError;
 
@@ -95,6 +97,7 @@ export function packFixture({ fixtureDir, destDir, timeoutMs = DEFAULT_PACK_TIME
       npmVersion,
       nodeVersion: process.version,
       npmCliJs: npmResult.npmCliJs,
+      packElapsedMs,
     };
   }
 
@@ -107,7 +110,13 @@ export function packFixture({ fixtureDir, destDir, timeoutMs = DEFAULT_PACK_TIME
     parseError = `Failed to parse npm pack JSON: ${e.message}`;
   }
 
-  if (parseError || !Array.isArray(packData) || packData.length === 0) {
+  const candidate = Array.isArray(packData) && packData.length === 1 ? packData[0] : null;
+  const validMetadata = candidate && typeof candidate.filename === 'string' &&
+    candidate.filename === basename(candidate.filename) &&
+    !/[\\/:]/.test(candidate.filename) && candidate.filename.endsWith('.tgz') &&
+    typeof candidate.name === 'string' && candidate.name.length > 0 &&
+    Array.isArray(candidate.files) && candidate.files.every(f => typeof f.path === 'string');
+  if (parseError || !validMetadata) {
     return {
       tarballPath: null,
       archiveSHA256: null,
@@ -115,13 +124,14 @@ export function packFixture({ fixtureDir, destDir, timeoutMs = DEFAULT_PACK_TIME
       packageName: null,
       packStdout,
       packStderr,
-      packExit: parseError ? 1 : packExit,
+      packExit,
       packSignal,
       packTimedOut,
-      packError: parseError || 'npm pack produced no metadata',
+      packError: parseError || 'npm pack did not produce one valid archive metadata entry',
       npmVersion,
       nodeVersion: process.version,
       npmCliJs: npmResult.npmCliJs,
+      packElapsedMs,
     };
   }
 
@@ -139,13 +149,14 @@ export function packFixture({ fixtureDir, destDir, timeoutMs = DEFAULT_PACK_TIME
       packageName,
       packStdout,
       packStderr,
-      packExit: 1,
+      packExit,
       packSignal,
       packTimedOut,
       packError: `npm pack reported filename '${entry.filename}' but file not found at: ${tarballPath}`,
       npmVersion,
       nodeVersion: process.version,
       npmCliJs: npmResult.npmCliJs,
+      packElapsedMs,
     };
   }
 
@@ -165,5 +176,6 @@ export function packFixture({ fixtureDir, destDir, timeoutMs = DEFAULT_PACK_TIME
     npmVersion,
     nodeVersion: process.version,
     npmCliJs: npmResult.npmCliJs,
+    packElapsedMs,
   };
 }

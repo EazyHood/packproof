@@ -7,9 +7,10 @@ Started during the IBM Bob 2.0 build window, 25 September 2026 (Colombia time).
 | Planning brief and acceptance criteria | Codex, based on official event materials and prior planning | Written |
 | Independent fixture packages and consumer reference contracts | Codex, separately attributed under validation-fixtures | Written; 5 source tests passed and 6 manual consumer cases observed as expected |
 | PackProof CLI, archive/report pipeline and substantive implementation | IBM Bob IDE (tasks BOB_TASK_01, BOB_TASK_02, BOB_TASK_03) | Implemented, repaired and hardened: all src/ and test/ files; verify.mjs new in task 03; README.md new in task 03 |
-| Independent verification and review | Codex | Task 02: 42/42 tests pass; all six demo outcomes correct. Task 03 repairs described below; Codex validation not yet observed. |
+| Independent verification and review | Codex | Original task 03: 48/49 tests passed; both false-PASS controls corrected and six demo outcomes matched. Final review corrections: 64/64 tests passed, 0 skipped, six demo outcomes matched and source baseline passed on Windows. |
+| Final evidence corrections | Codex, separately attributed after preserving Bob task 03 | Real bounded archive-byte comparison, exact installed identity, pre/post evidence gating, corrected regression fixture, command records, strict missing-baseline handling and documentation; original Bob code retained in d246d37 |
 | Bob consumption-summary screenshots | Actual Bob IDE task output required | Tasks 01–03 produced code; genuine final consumption-summary screenshots not yet collected |
-| Report viewer and demo recording | Contributor will be recorded when produced | Not started |
+| Report viewer and demo recording | Codex | Static saved-report viewer being prepared; no MP4 or public submission yet |
 | Demo storyboard and independent comparator evaluation | Codex | Storyboard drafted; publint/ATTW comparison recorded separately, not PackProof runner results |
 
 ## Implementation notes (Bob task BOB_TASK_01)
@@ -45,9 +46,9 @@ Files changed by IBM Bob IDE in this task:
 - **`src/cli.mjs`** — `parseTimeout()` rejects non-digit characters (e.g. `12oops`); demo passes `timeoutMs` from CLI; `mkdirSync` for demo baseOutDir; `artifactDir` parameter; error-caught `runCase` call; shows `RunDir` in output
 - **`test/packproof.test.mjs`** — 40 tests across §1–§10; §10 adds six E2E tests with real npm pack/install (skipped when npm-cli.js unavailable); §9 adds path traversal, repeat run, report-filename regressions; §5 adds null-exit and timeout-reason regressions; §7 adds malformed timeout and zero timeout tests; §8 adds npm-runner unit tests
 
-## Independent review after task 01
+## Historical independent review after task 01
 
-Codex preserved the original Bob implementation in local commit `3ab678e` before preparing any corrections. The 23 passing tests do not exercise the full pack/install/runCase pipeline. All six demo cases actually returned INCONCLUSIVE because Windows rejected a direct npm.cmd spawn with shell:false (EINVAL). Codex also reproduced report overwrite, case-label path traversal within a disposable probe directory and misleading timeout wording. These are current limitations, not completed repairs.
+Codex preserved the original Bob implementation in local commit `3ab678e` before preparing any corrections. The 23 passing tests do not exercise the full pack/install/runCase pipeline. All six demo cases actually returned INCONCLUSIVE because Windows rejected a direct npm.cmd spawn with shell:false (EINVAL). Codex also reproduced report overwrite, case-label path traversal within a disposable probe directory and misleading timeout wording. These were the limitations before tasks 02–03 and final review corrections.
 
 Historical state before task 02: BOB_REVIEW_01.md and BOB_TASK_02.md were written by Codex for Jhona to send manually. Task 02 has since produced the changes described above and is preserved in commit `51b4837`. Codex observed 42 passing tests and six matching demo outcomes, then reproduced two false PASS evidence controls described in BOB_REVIEW_02.md. BOB_TASK_03.md was then prepared by Codex and executed by IBM Bob IDE, producing the task 03 changes described below. No core source, test or frozen contract was changed by Codex during these reviews. No final task consumption figure or session screenshot has been observed. Work proceeds through files and commands without controlling the user's windows.
 
@@ -67,3 +68,13 @@ Files created or changed by IBM Bob IDE in this task:
 Frozen consumer contracts under `validation-fixtures/contracts/` were not modified.
 Frozen fixture packages and evidence under `validation-fixtures/` were not modified.
 No claims of executed task 03 tests or captured consumption screenshots are made at this stage.
+
+## Final independent verification and corrections — Codex
+
+Bob task 03 was preserved unmodified in commit `d246d37` before review edits. Its suite had 48 passes and one failure: the ancestor-resolution test did not create its source fixture. The six demo cases and actual source baseline passed; both independently reproduced false-PASS controls now returned INCONCLUSIVE.
+
+Codex corrected the test setup, completed bounded in-memory tarball-to-installed-file comparison, exact package-path/identity verification, mandatory positive pre/post checks, error/signal classification, source-baseline completeness, command records and documentation. New files `src/archive-integrity.mjs`, `test/evidence-integrity.test.mjs` and `test/review-regressions.test.mjs` are Codex work. These changes build on Bob's substantive CLI and report pipeline and are not attributed to Bob.
+
+Final observed validation on Windows, Node 24.16.0/npm 11.13.0: **64 tests passed, 0 failed, 0 skipped**; **six demo observations matched**, with three genuine contract failures retained as FAIL; the frozen source baseline passed. Additional actual executions cover changed contract bytes, an unreadable contract copy and changed installed package bytes. Linux has not been tested. Raw records are retained outside the public project under the coordinating task's `outputs/ibm-bob-2/validation-final-2026-09-25` directory.
+
+Frozen fixture packages and reference contracts remain unchanged. No customer adoption, measured time savings, prize, public submission or genuine consumption-summary screenshot is implied by these results. Bob's final consumption for each task remains unrecorded until real screenshots are supplied.
