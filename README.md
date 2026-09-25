@@ -4,6 +4,8 @@
 
 [Explore the live evidence viewer](https://eazyhood.github.io/packproof/) · [Validation](VALIDATION.md) · [IBM Bob session evidence](bob_sessions/index.md)
 
+[Hackathon submission](https://lablab.ai/ai-hackathons/ibm-bob-2-hackathon/eazyhood/packproof-test-what-you-ship) · [Demo video, slides and versioned source](https://github.com/EazyHood/packproof/releases/tag/v0.1.0-hackathon)
+
 PackProof packages a trusted local npm fixture, installs its exact tarball in a fresh consumer, and executes an explicit consumer contract. It preserves the archive hash, file list, installed-byte comparison, contract hashes, outputs and verification results in a JSON report.
 
 The demo uses a small label library whose source can read a template that the broken archive omits. The same consumer expectation fails after install, then passes when the template is included. Importing alone misses this defect. A separate CommonJS package and deliberate negative controls keep the demonstration honest.
