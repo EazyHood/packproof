@@ -1,0 +1,1 @@
+{{sku}} | QTY {{quantity}} | BIN {{bin}}

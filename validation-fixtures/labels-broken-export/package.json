@@ -1,0 +1,10 @@
+{
+  "name": "@packproof/labels",
+  "version": "1.0.0",
+  "description": "Original trusted PackProof fixture: fictional inventory labels",
+  "type": "module",
+  "exports": "./dist/not-here.mjs",
+  "files": ["src"],
+  "engines": { "node": ">=24" },
+  "license": "MIT"
+}

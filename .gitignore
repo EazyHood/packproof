@@ -1,0 +1,10 @@
+node_modules/
+.runs/
+.packproof-runs/
+.env
+.env.*
+!.env.example
+*.log
+validation-fixtures/evidence/manual-baseline-*/consumers/
+validation-fixtures/evidence/manual-baseline-*/npm-cache/
+

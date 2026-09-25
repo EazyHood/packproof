@@ -1,0 +1,9 @@
+{
+  "name": "@packproof/tally",
+  "version": "1.0.0",
+  "description": "Original trusted PackProof fixture: fictional stock tally",
+  "main": "./lib/summary.cjs",
+  "files": ["lib", "data"],
+  "engines": { "node": ">=24" },
+  "license": "MIT"
+}
