@@ -10,7 +10,8 @@ Started during the IBM Bob 2.0 build window, 25 September 2026 (Colombia time).
 | Independent verification and review | Codex | Original task 03: 48/49 tests passed; both false-PASS controls corrected and six demo outcomes matched. Final review corrections: 64/64 tests passed, 0 skipped, six demo outcomes matched and source baseline passed on Windows. |
 | Final evidence corrections | Codex, separately attributed after preserving Bob task 03 | Real bounded archive-byte comparison, exact installed identity, pre/post evidence gating, corrected regression fixture, command records, strict missing-baseline handling and documentation; original Bob code retained in d246d37 |
 | Bob consumption-summary screenshots | Actual Bob IDE task output, captured through the UI | [Genuine summary](bob_sessions/EazyHood-task-01-packproof-consumption.jpg) captured 25 September 2026 at 21:05:32.783 UTC. The UI inventory showed one relevant development task covering phases 01–03; displayed consumption: 30.16 Bobcoins. See [evidence index](bob_sessions/index.md). |
-| Report viewer and export script | Codex | Static saved-report viewer completed; six authentic redacted reports, import/filter/details controls and responsive layout verified in isolated headless Chromium; no MP4 or public submission yet |
+| Report viewer and export script | Codex | Static saved-report viewer completed; six authentic redacted reports, import/filter/details controls and responsive layout verified in isolated headless Chromium; published at https://eazyhood.github.io/packproof/ |
+| Final demo and presentation | Codex; actual local CLI and viewer recording, genuine Bob screenshot, authorized local synthetic narration | 170-second MP4, including 119 seconds of solution interaction; 7-page PDF and cover. Public release assets preserve the reviewed files. No claim that the filming harness is a hosted product feature. |
 | Demo storyboard and independent comparator evaluation | Codex | Storyboard drafted; publint/ATTW comparison recorded separately, not PackProof runner results |
 
 ## Implementation notes (Bob development phase BOB_TASK_01)
@@ -30,7 +31,7 @@ Files created by IBM Bob IDE in this phase:
 
 Frozen consumer contracts under `validation-fixtures/contracts/` were not modified. The Codex manual baseline observations.json was not modified.
 
-No claims of real customer adoption, measured productivity gains, novelty over all existing tools, or contest submission are made at this stage. No paid plan or purchase has been activated.
+No claims of real customer adoption, measured productivity gains or novelty over all existing tools are made. No paid plan or purchase has been activated. The sections below preserve the historical development state; submission status is a separate platform record.
 
 ## Repair summary — Bob development phase BOB_TASK_02
 
